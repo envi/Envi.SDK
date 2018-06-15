@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2011
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Common.Entities", "Api.Common.Entities\Api.Common.Entities.csproj", "{6DFA08B9-0760-4E26-A64E-1E3503BAB062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOSCorp.SDK", "IOSCorp.SDK\IOSCorp.SDK.csproj", "{28EE0BAF-89DA-44A9-9CDE-8BA840096254}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6DFA08B9-0760-4E26-A64E-1E3503BAB062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DFA08B9-0760-4E26-A64E-1E3503BAB062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DFA08B9-0760-4E26-A64E-1E3503BAB062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DFA08B9-0760-4E26-A64E-1E3503BAB062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28EE0BAF-89DA-44A9-9CDE-8BA840096254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28EE0BAF-89DA-44A9-9CDE-8BA840096254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28EE0BAF-89DA-44A9-9CDE-8BA840096254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28EE0BAF-89DA-44A9-9CDE-8BA840096254}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72F4E4A4-626F-4F07-B414-22607145C11D}
+	EndGlobalSection
+EndGlobal
