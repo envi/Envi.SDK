@@ -1,11 +1,11 @@
 # IOSCorp.SDK
-This repository is intended to contain source code of SDK and examples of usage for Envi OData public API
+This repository contains a source code of SDK and examples of how to use Envi OData public API. It consists of two projects:
 
 Solution consists of two projects:
 
-1. Api.Common.Entities - contains DTO classes (models) and enums that are used by API and will be used by SDK in the nearest future;
-2. IOSCorp.SDK - contains generic helper classes, which represents different kinds of OData request/response messages. Class Program contains the next examples of API invocation:
-	- Example on obtaining of JWT token, usage of access token for auth and refresh token for JWT renewal;
-	- Simple GET, POST, PUT, PUTCH calls based on Inventory module. In general, principles are the same for all implemented modules;
-	- Example of Inventory Master Interface data retrieving using API;
-	- Example of Batch Request usage (when multiple request are send in a batch).
+1. Api.Common.Entities - contains DTO classes (models) and enums that will be used by API and SDK in the nearest future;
+2. IOSCorp.SDK - contains generic helper classes which represent different kinds of OData request or response messages. The Program сlass contains the following examples of API invocation:
+	- Obtaining the JWT token, using access token for auth, and refreshing the JWT token when it expires;
+	- Using simple GET, POST, PUT, and PATCH calls based on Inventory module. Generally, all implemented modules use the same pattern;
+	- Retrieving Inventory Master Interface data using API;
+	- Using Batch Request (in case multiple requests are sent in a batch).
