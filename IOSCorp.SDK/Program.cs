@@ -84,7 +84,13 @@ namespace IOSCorp.SDK
 		    // returned by current Inventory Master interface (changed Inventory, corresponding Inventory/Locations
 			// and Inventory/Vendors and related Vendors information)
 		    InventoryMasterInterface(new DateTime(2017, 10, 1), null, null ).GetAwaiter().GetResult();
-	    }
+
+		    // OData query options usage examples shows how to use system query options correctlly based on Inventory end-point
+		    TopSkipExamples().GetAwaiter().GetResult();
+		    OrderByExamples().GetAwaiter().GetResult();
+		    FilteringExamples().GetAwaiter().GetResult();
+		    SearchExamples().GetAwaiter().GetResult();
+		}
 
 		#region Inventory Master interface example
 
@@ -322,7 +328,87 @@ namespace IOSCorp.SDK
 
 		#endregion
 
-	    private static Inventory GetNewInventory()
+		#region Odata Query Options Examples
+
+		private static async Task SearchExamples()
+		{
+			var inventoryUrl = "/odata/Inventory";
+			//Obtain JWT token and set access token to authorization header
+			await SetAuthHeader();
+
+			// search by all fileds with "test" search value
+			var response = await Client.GetAsync($"{inventoryUrl}?$search=test");
+			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			await Task.FromResult(0);
+		}
+
+		private static async Task FilteringExamples()
+		{
+			var inventoryUrl = "/odata/Inventory";
+			//Obtain JWT token and set access token to authorization header
+			await SetAuthHeader();
+
+			// filtering by inventoryDescription field with strict match
+			var response = await Client.GetAsync($"{inventoryUrl}?$filter=inventoryDescription eq 'test'");
+			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by inventoryDescription field with LIKE expression
+			response = await Client.GetAsync($"{inventoryUrl}?$filter=contains(inventoryDescription,'test')");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by inventoryNo field with LIKE expression
+			response = await Client.GetAsync($"{inventoryUrl}?$filter=contains(inventoryNo,'inv')");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			await Task.FromResult(0);
+		}
+
+		private static async Task TopSkipExamples()
+		{
+			var inventoryUrl = "/odata/Inventory";
+			//Obtain JWT token and set access token to authorization header
+			await SetAuthHeader();
+
+			// retrive top 50 records
+			var response = await Client.GetAsync($"{inventoryUrl}?$top=50");
+			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// retrieve top 50 records starting from record #11
+			response = await Client.GetAsync($"{inventoryUrl}?$top=50&$skip=10");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// retrieve default amount of records starting from record #21
+			response = await Client.GetAsync($"{inventoryUrl}?$skip=20");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			await Task.FromResult(0);
+		}
+
+		private static async Task OrderByExamples()
+		{
+			var inventoryUrl = "/odata/Inventory";
+			//Obtain JWT token and set access token to authorization header
+			await SetAuthHeader();
+
+			// sorting by notes field in ascending order
+			var response = await Client.GetAsync($"{inventoryUrl}?$orderBy=notes");
+			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// sorting by classificationName field in ascending order by specifying sorting direction explicitly
+			response = await Client.GetAsync($"{inventoryUrl}?$orderBy=classificationName asc");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// sorting by stockUOM field in descending order by specifying sorting direction explicitly
+			response = await Client.GetAsync($"{inventoryUrl}?$orderBy=stockUOM desc");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			await Task.FromResult(0);
+		}
+
+		#endregion
+
+		private static Inventory GetNewInventory()
 	    {
 			var inventory = new Inventory
 			{
