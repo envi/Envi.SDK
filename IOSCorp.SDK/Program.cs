@@ -23,7 +23,7 @@ namespace IOSCorp.SDK
 	    private static readonly string _baseAddress = "https://API_HOST_NAME";
 
 		/// <summary>
-		/// Holds instance of correctlly initialized HTTP Client
+		/// Holds instance of correctly initialized HTTP Client
 		/// </summary>
         private static HttpClient _client;
 
@@ -31,9 +31,7 @@ namespace IOSCorp.SDK
 		/// Holds instance of obtained JWT token
 		/// </summary>
         private static JWT _token;
-
-        //private static readonly string _formatString = "?$format=application/json;odata.metadata=none";
-
+		
 		#region Authentication
 
 		private static async Task<JWT> GetToken()
@@ -76,8 +74,8 @@ namespace IOSCorp.SDK
 		    // of Inventory or individual item by its primary key 
 		    InventoryExamples().GetAwaiter().GetResult();
 
-			// Contains an axample on how to execute requests in a batch, so one batch reauest contains multiple individual requests 
-		    // which are executed separatelly on the server side and results are combined to a single response
+			// Contains an example on how to execute requests in a batch, so one batch request contains multiple individual requests 
+		    // which are executed separately on the server side and results are combined to a single response
 		    BatchExample().GetAwaiter().GetResult();
 
 			// Example on how to invoke few different API end-points in order to obtain the same data as 
@@ -85,11 +83,12 @@ namespace IOSCorp.SDK
 			// and Inventory/Vendors and related Vendors information)
 		    InventoryMasterInterface(new DateTime(2017, 10, 1), null, null ).GetAwaiter().GetResult();
 
-		    // OData query options usage examples shows how to use system query options correctlly based on Inventory end-point
+		    // OData query options usage examples shows how to use system query options correctly based on Inventory end-point
 		    TopSkipExamples().GetAwaiter().GetResult();
 		    OrderByExamples().GetAwaiter().GetResult();
 		    FilteringExamples().GetAwaiter().GetResult();
 		    SearchExamples().GetAwaiter().GetResult();
+		    FormatExamples().GetAwaiter().GetResult();
 		}
 
 		#region Inventory Master interface example
@@ -167,11 +166,11 @@ namespace IOSCorp.SDK
 				ComposeGetContent($"{_baseAddress}/odata/Inventory({new Guid("2a3e66aa-2e15-4035-8534-cb8a2280beea")})")
 			};
 
-			// Multile POST Requests
-			// multipart content that represents the changeset container
+			// Multiple POST Requests
+			// multi-part content that represents the change-set container
 			MultipartContent changeSet = new MultipartContent("mixed", $"changeset_{Guid.NewGuid()}");
 
-			// Add POST content to the changeset
+			// Add POST content to the change-set
 			var content1 = new StringContent(Serialize(GetNewInventory()), Encoding.UTF8, "application/json");
 			var content2 = new StringContent(Serialize(GetNewInventory()), Encoding.UTF8, "application/json");
 			var content3 = new StringContent(Serialize(GetNewInventory()), Encoding.UTF8, "application/json");
@@ -179,7 +178,7 @@ namespace IOSCorp.SDK
 			changeSet.Add(ComposePostContent($"{_baseAddress}/odata/Inventory", content2));
 			changeSet.Add(ComposePostContent($"{_baseAddress}/odata/Inventory", content3));
 
-			// Add the changeset to the batch content
+			// Add the change-set to the batch content
 			batchContent.Add(changeSet);
 
 			batchRequest.Content = batchContent;
@@ -199,7 +198,7 @@ namespace IOSCorp.SDK
 					await currentContent.ReadAsHttpResponseMessageAsync();
 					// The workingResponse object contains a classic exploitable HttpResponseMessage (with IsSuccessStatusCode, Content.ReadAsStringAsync().Result, etc.)
 				}
-				// 2. a changeset response with multipart content
+				// 2. a change-set response with multi-part content
 				else
 				{
 					var subMultipartContent = await currentContent.ReadAsMultipartAsync();
@@ -330,13 +329,47 @@ namespace IOSCorp.SDK
 
 		#region Odata Query Options Examples
 
+		private static async Task FormatExamples()
+		{
+			var inventoryUrl = "/odata/Inventory";
+			//Obtain JWT token and set access token to authorization header
+			await SetAuthHeader();
+
+			// retrieving Inventory list with default metadata amount
+			var response = await Client.GetAsync(inventoryUrl);
+			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// retrieving Inventory list with default metadata amount specified explicitly
+			response = await Client.GetAsync($"{inventoryUrl}?$format=application/json;odata.metadata=minimal");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+
+			// retrieving Inventory list without metadata information included
+			// Notice: result variable is of ODataListResponse<Inventory> type, so ODataContext property should be "null" since 
+			// it does not included into response
+			response = await Client.GetAsync($"{inventoryUrl}?$format=application/json;odata.metadata=none");
+			var stringResult = await response.Content.ReadAsStringAsync();
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(stringResult);
+
+			// retrieving Inventory list with all possible metadata information included
+			// Notice: result variable is of ODataListResponse<Inventory> type, so no additional data will be included into .net object
+			// to observe the difference with default metadata amount, please examine stringResult variable.
+			// In order to have all properties available in .net class, the class itself should be regenerated based on extended JSON
+			// There is no sense to generate this class at the moment since it contains all entity related information,
+			// including action and functions, which are subjects of future changes
+			response = await Client.GetAsync($"{inventoryUrl}?$format=application/json;odata.metadata=full");
+			stringResult = await response.Content.ReadAsStringAsync();
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(stringResult);
+
+			await Task.FromResult(0);
+		}
+
 		private static async Task SearchExamples()
 		{
 			var inventoryUrl = "/odata/Inventory";
 			//Obtain JWT token and set access token to authorization header
 			await SetAuthHeader();
 
-			// search by all fileds with "test" search value
+			// search by all fields with "test" search value
 			var response = await Client.GetAsync($"{inventoryUrl}?$search=test");
 			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 
@@ -370,7 +403,7 @@ namespace IOSCorp.SDK
 			//Obtain JWT token and set access token to authorization header
 			await SetAuthHeader();
 
-			// retrive top 50 records
+			// retrieve top 50 records
 			var response = await Client.GetAsync($"{inventoryUrl}?$top=50");
 			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 
