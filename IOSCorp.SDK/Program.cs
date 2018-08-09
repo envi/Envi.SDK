@@ -144,7 +144,6 @@ namespace IOSCorp.SDK
 			// Getting information combined (adding of Inventory/Vendors and Inventory/Locations to corresponding Inventory)
 			inventory.ForEach(i => i.InventoryLocations = new List<InventoryLocation>(inventoryLocations.Where(il => il.InventoryId == i.InventoryId).ToList()));
 			inventory.ForEach(i => i.InventoryVendors = new List<InventoryVendor>(inventoryVendors.Where(iv => iv.InventoryId == i.InventoryId).ToList()));
-			await Task.FromResult(0);
 		}
 
 		#endregion
@@ -210,8 +209,6 @@ namespace IOSCorp.SDK
 					}
 				}
 			}
-
-			await Task.FromResult(0);
 		}
 
 		private static HttpMessageContent ComposeGetContent(string url)
@@ -359,8 +356,6 @@ namespace IOSCorp.SDK
 			response = await Client.GetAsync($"{inventoryUrl}?$format=application/json;odata.metadata=full");
 			stringResult = await response.Content.ReadAsStringAsync();
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(stringResult);
-
-			await Task.FromResult(0);
 		}
 
 		private static async Task SearchExamples()
@@ -372,8 +367,6 @@ namespace IOSCorp.SDK
 			// search by all fields with "test" search value
 			var response = await Client.GetAsync($"{inventoryUrl}?$search=test");
 			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
-
-			await Task.FromResult(0);
 		}
 
 		private static async Task FilteringExamples()
@@ -390,11 +383,15 @@ namespace IOSCorp.SDK
 			response = await Client.GetAsync($"{inventoryUrl}?$filter=contains(inventoryDescription,'test')");
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 
-			// filtering by inventoryNo field with LIKE expression
-			response = await Client.GetAsync($"{inventoryUrl}?$filter=contains(inventoryNo,'inv')");
+			// filtering by inventoryNo field with LIKE expression and by classificationName field with strict match
+			// Note: Mix of AND/OR statements in one query is not supported.
+			response = await Client.GetAsync($"{inventoryUrl}?$filter=contains(inventoryNo,'inv') AND classificationName eq 'medication'");
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 
-			await Task.FromResult(0);
+			// filtering by classificationName field with strict match or by systemType field with strict match
+			// Note: Mix of AND/OR statements in one query is not supported.
+			response = await Client.GetAsync($"{inventoryUrl}?$filter=classificationName eq 'medication' OR systemType eq 'implant'");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 		}
 
 		private static async Task TopSkipExamples()
@@ -414,8 +411,6 @@ namespace IOSCorp.SDK
 			// retrieve default amount of records starting from record #21
 			response = await Client.GetAsync($"{inventoryUrl}?$skip=20");
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
-
-			await Task.FromResult(0);
 		}
 
 		private static async Task OrderByExamples()
@@ -435,8 +430,6 @@ namespace IOSCorp.SDK
 			// sorting by stockUOM field in descending order by specifying sorting direction explicitly
 			response = await Client.GetAsync($"{inventoryUrl}?$orderBy=stockUOM desc");
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
-
-			await Task.FromResult(0);
 		}
 
 		#endregion
