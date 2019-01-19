@@ -63,9 +63,19 @@
     <Compile Include="Inventory\DTO\POHistoryItem.cs" />
     <Compile Include="Locations\DTO\Location.cs" />
     <Compile Include="Manufacturers\DTO\Manufacturer.cs" />
+    <Compile Include="MatchedInvoices\DTO\APMatchedInvoice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PurchaseOrders\DTO\PurchaseOrder.cs" />
+    <Compile Include="PurchaseOrders\DTO\PurchaseOrderItem.cs" />
+    <Compile Include="Receiving\DTO\Receipt.cs" />
+    <Compile Include="Receiving\DTO\ReceiptItem.cs" />
+    <Compile Include="RequestRateLimits\DTO\RateLimit.cs" />
+    <Compile Include="RequestRateLimits\Enums\LimitLevel.cs" />
+    <Compile Include="RequestRateLimits\Enums\LimitPeriod.cs" />
+    <Compile Include="RequestRateLimits\Enums\LimitType.cs" />
     <Compile Include="Usages\DTO\Usage.cs" />
     <Compile Include="Usages\DTO\UsageItem.cs" />
+    <Compile Include="Usages\DTO\UsageProcedure.cs" />
     <Compile Include="Vendors\DTO\Vendor.cs" />
     <Compile Include="Vendors\DTO\VendorInfo.cs" />
   </ItemGroup>

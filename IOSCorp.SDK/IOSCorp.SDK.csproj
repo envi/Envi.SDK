@@ -53,6 +53,7 @@
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="JWT.cs" />
     <Compile Include="ListRepresentation.cs" />
+    <Compile Include="ODataErrorResponse.cs" />
     <Compile Include="ODataListResponse.cs" />
     <Compile Include="ODataSingleValueResponse.cs" />
     <Compile Include="Program.cs" />

@@ -11,29 +11,41 @@ using System.Text;
 using System.Threading.Tasks;
 using Api.Common.Entities.InventoryLocations.DTO;
 using Api.Common.Entities.InventoryVendors.DTO;
+using Api.Common.Entities.Usages.DTO;
 using Api.Common.Entities.Vendors.DTO;
 
 namespace IOSCorp.SDK
 {
-    internal class Program
-    {
+	/// <summary>
+	/// Class Program.
+	/// </summary>
+	internal class Program
+	{
+		#region Private fields
+
 		/// <summary>
 		/// Base address of OData API Service
 		/// </summary>
-	    private static readonly string _baseAddress = "https://API_HOST_NAME";
+		private static readonly string _baseAddress = "https://API_HOST_NAME";
 
 		/// <summary>
 		/// Holds instance of correctly initialized HTTP Client
 		/// </summary>
-        private static HttpClient _client;
+		private static HttpClient _client;
 
 		/// <summary>
 		/// Holds instance of obtained JWT token
 		/// </summary>
-        private static JWT _token;
-		
+		private static JWT _token;
+
+		#endregion
+
 		#region Authentication
 
+		/// <summary>
+		/// Gets the token.
+		/// </summary>
+		/// <returns>Task&lt;JWT&gt;.</returns>
 		private static async Task<JWT> GetToken()
 		{
 			if (_token == null)
@@ -58,55 +70,77 @@ namespace IOSCorp.SDK
 			return _token;
 		}
 
-	    private static async Task<JWT> RequestToken(List<KeyValuePair<string, string>> requestData)
-	    {
-		    var response = await Client.PostAsync("oauth2/token", new FormUrlEncodedContent(requestData));
-		    var content = await response.Content.ReadAsStringAsync();
+		/// <summary>
+		/// Requests the token.
+		/// </summary>
+		/// <param name="requestData">The request data.</param>
+		/// <returns>Task&lt;JWT&gt;.</returns>
+		private static async Task<JWT> RequestToken(List<KeyValuePair<string, string>> requestData)
+		{
+			var response = await Client.PostAsync("oauth2/token", new FormUrlEncodedContent(requestData));
+			var content = await response.Content.ReadAsStringAsync();
 
-		    return JsonConvert.DeserializeObject<JWT>(content);
-	    }
+			return JsonConvert.DeserializeObject<JWT>(content);
+		}
 
 		#endregion
-		
-	    public static void Main()
-	    {
+
+		#region Constructor
+
+		/// <summary>
+		/// Defines the entry point of the application.
+		/// </summary>
+		public static void Main()
+		{
 			// Inventory examples contains simple operation for Inventory like new item creation, update, patch, retrieving paged list
-		    // of Inventory or individual item by its primary key 
-		    InventoryExamples().GetAwaiter().GetResult();
+			// of Inventory or individual item by its primary key 
+			InventoryExamples().GetAwaiter().GetResult();
 
 			// Contains an example on how to execute requests in a batch, so one batch request contains multiple individual requests 
-		    // which are executed separately on the server side and results are combined to a single response
-		    BatchExample().GetAwaiter().GetResult();
+			// which are executed separately on the server side and results are combined to a single response
+			BatchExample().GetAwaiter().GetResult();
 
 			// Example on how to invoke few different API end-points in order to obtain the same data as 
-		    // returned by current Inventory Master interface (changed Inventory, corresponding Inventory/Locations
+			// returned by current Inventory Master interface (changed Inventory, corresponding Inventory/Locations
 			// and Inventory/Vendors and related Vendors information)
-		    InventoryMasterInterface(new DateTime(2017, 10, 1), null, null ).GetAwaiter().GetResult();
+			InventoryMasterInterface(new DateTime(2017, 10, 1), null, null ).GetAwaiter().GetResult();
 
-		    // OData query options usage examples shows how to use system query options correctly based on Inventory end-point
-		    TopSkipExamples().GetAwaiter().GetResult();
-		    OrderByExamples().GetAwaiter().GetResult();
-		    FilteringExamples().GetAwaiter().GetResult();
-		    SearchExamples().GetAwaiter().GetResult();
-		    FormatExamples().GetAwaiter().GetResult();
+			// OData query options usage examples shows how to use system query options correctly based on Inventory end-point
+			TopSkipExamples().GetAwaiter().GetResult();
+			OrderByExamples().GetAwaiter().GetResult();
+			FilteringExamples().GetAwaiter().GetResult();
+			SearchExamples().GetAwaiter().GetResult();
+			FormatExamples().GetAwaiter().GetResult();
+			
+			// Example how to use HTTP depletion interface using OData API
+			DepletionInterface().GetAwaiter().GetResult();
 		}
+
+		#endregion
 
 		#region Inventory Master interface example
 
+		/// <summary>
+		/// Inventories the master interface.
+		/// </summary>
+		/// <param name="lastRunDate">The last run date.</param>
+		/// <param name="facilityPK">The facility pk.</param>
+		/// <param name="syncFlag">if set to <c>true</c> [synchronize flag].</param>
+		/// <returns>Task.</returns>
 		private static async Task InventoryMasterInterface(DateTime lastRunDate, Guid? facilityPK, bool? syncFlag)
 		{
-			const string invntoryUrlTmpl = "/odata/Inventory/GetAllFromDate(from={0},facilityId={1},syncFlag={2})";
-			const string invntoryLocationsUrlTmpl = "/odata/InventoryLocations/GetAllFromDate(from={0},facilityId={1},syncFlag={2})";
-			const string invntoryVendorsUrlTmpl = "/odata/InventoryVendors/GetAllFromDate(from={0},facilityId={1},syncFlag={2})";
-			const string vendorsUrlTmpl = "/odata/Vendors/GetVendorsInfo(facilityId={0})";
-			const string dateFormat = "yyyy-MM-dd";
+			const string INVNTORY_URL_TMPL = "/odata/Inventory/GetAllFromDate(from={0},facilityId={1},syncFlag={2})";
+			const string INVNTORY_LOCATIONS_URL_TMPL = "/odata/InventoryLocations/GetAllFromDate(from={0},facilityId={1},syncFlag={2})";
+			const string INVNTORY_VENDORS_URL_TMPL = "/odata/InventoryVendors/GetAllFromDate(from={0},facilityId={1},syncFlag={2})";
+			const string VENDORS_URL_TMPL = "/odata/Vendors/GetVendorsInfo(facilityId={0})";
+			const string DATE_FORMAT = "yyyy-MM-dd";
 
 			//Obtain JWT token and set access token to authorization header
 			await SetAuthHeader();
 
 			//Retrieving of Inventory Info
-			var inventoryUrl = string.Format(invntoryUrlTmpl,
-				lastRunDate.ToString(dateFormat),
+			var inventoryUrl = string.Format(INVNTORY_URL_TMPL,
+				lastRunDate.ToString(DATE_FORMAT),
 				facilityPK?.ToString() ?? "null",
 				syncFlag?.ToString() ?? "null");
 			var response = await Client.GetAsync(inventoryUrl);
@@ -114,8 +148,8 @@ namespace IOSCorp.SDK
 			var inventory = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(inventoryResult).Value;
 
 			// Retrieving of corresponding Inventory/Locations
-			var inventoryLocationsUrl = string.Format(invntoryLocationsUrlTmpl,
-				lastRunDate.ToString(dateFormat),
+			var inventoryLocationsUrl = string.Format(INVNTORY_LOCATIONS_URL_TMPL,
+				lastRunDate.ToString(DATE_FORMAT),
 				facilityPK?.ToString() ?? "null",
 				syncFlag?.ToString() ?? "null");
 			response = await Client.GetAsync(inventoryLocationsUrl);
@@ -123,8 +157,8 @@ namespace IOSCorp.SDK
 			var inventoryLocations = JsonConvert.DeserializeObject<ODataListResponse<InventoryLocation>>(inventoryLocationsResult).Value;
 
 			// Retrieving of corresponding Inventory/Vendors
-			var inventoryVendorsUrl = string.Format(invntoryVendorsUrlTmpl,
-				lastRunDate.ToString(dateFormat),
+			var inventoryVendorsUrl = string.Format(INVNTORY_VENDORS_URL_TMPL,
+				lastRunDate.ToString(DATE_FORMAT),
 				facilityPK?.ToString() ?? "null",
 				syncFlag?.ToString() ?? "null");
 			response = await Client.GetAsync(inventoryVendorsUrl);
@@ -135,7 +169,7 @@ namespace IOSCorp.SDK
 			var vendorIds = inventoryVendors.GroupBy(pk => pk.VendorId).Select(g => g.Key).ToList();
 
 			// Retrieving of Vendors information
-			var vendorsUrl = string.Format(vendorsUrlTmpl, facilityPK?.ToString() ?? "null");
+			var vendorsUrl = string.Format(VENDORS_URL_TMPL, facilityPK?.ToString() ?? "null");
 			var content = new StringContent(Serialize(new ListRepresentation<Guid?> { Value = vendorIds }), Encoding.UTF8, "application/json");
 			response = await Client.PostAsync(vendorsUrl, content);
 			var vendorsResult = await response.Content.ReadAsStringAsync();
@@ -150,6 +184,10 @@ namespace IOSCorp.SDK
 
 		#region Batch Example
 
+		/// <summary>
+		/// Batches the example.
+		/// </summary>
+		/// <returns>Task.</returns>
 		private static async Task BatchExample()
 		{
 			var batchUrl = $"{_baseAddress}/odata/$batch";
@@ -211,6 +249,11 @@ namespace IOSCorp.SDK
 			}
 		}
 
+		/// <summary>
+		/// Composes the content of the get.
+		/// </summary>
+		/// <param name="url">The URL.</param>
+		/// <returns>HttpMessageContent.</returns>
 		private static HttpMessageContent ComposeGetContent(string url)
 		{
 			HttpMessageContent getContent = new HttpMessageContent(new HttpRequestMessage(HttpMethod.Get, url));
@@ -221,6 +264,13 @@ namespace IOSCorp.SDK
 			return getContent;
 		}
 
+		/// <summary>
+		/// Composes the content of the post.
+		/// </summary>
+		/// <param name="url">The URL.</param>
+		/// <param name="serrializedContent">Content of the serrialized.</param>
+		/// <param name="contentId">The content identifier.</param>
+		/// <returns>HttpMessageContent.</returns>
 		private static HttpMessageContent ComposePostContent(string url, StringContent serrializedContent, string contentId = null)
 		{
 			var postRequest = new HttpRequestMessage
@@ -243,6 +293,10 @@ namespace IOSCorp.SDK
 
 		#region Inventory Examples
 
+		/// <summary>
+		/// Inventories the examples.
+		/// </summary>
+		/// <returns>Task.</returns>
 		private static async Task InventoryExamples()
 		{
 			Inventory inventoryById = null;
@@ -284,6 +338,11 @@ namespace IOSCorp.SDK
 			}
 		}
 
+		/// <summary>
+		/// Gets the inventory by identifier.
+		/// </summary>
+		/// <param name="inventoryId">The inventory identifier.</param>
+		/// <returns>Task&lt;Inventory&gt;.</returns>
 		private static async Task<Inventory> GetInventoryById(Guid inventoryId)
 		{
 			await SetAuthHeader();
@@ -291,6 +350,10 @@ namespace IOSCorp.SDK
 			return JsonConvert.DeserializeObject<Inventory>(await response.Content.ReadAsStringAsync());
 		}
 
+		/// <summary>
+		/// Gets the inventory list.
+		/// </summary>
+		/// <returns>Task&lt;ODataListResponse&lt;Inventory&gt;&gt;.</returns>
 		private static async Task<ODataListResponse<Inventory>> GetInventoryList()
 		{
 			await SetAuthHeader();
@@ -298,6 +361,12 @@ namespace IOSCorp.SDK
 			return JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 		}
 
+		/// <summary>
+		/// Patches the inventory.
+		/// </summary>
+		/// <param name="entityId">The entity identifier.</param>
+		/// <param name="patch">The patch.</param>
+		/// <returns>Task&lt;System.Boolean&gt;.</returns>
 		private static async Task<bool> PatchInventory(Guid entityId, Inventory patch)
 		{
 			await SetAuthHeader();
@@ -306,6 +375,11 @@ namespace IOSCorp.SDK
 			return response.IsSuccessStatusCode;
 		}
 
+		/// <summary>
+		/// Posts the inventory.
+		/// </summary>
+		/// <param name="newItem">The new item.</param>
+		/// <returns>Task&lt;ODataSingleValueResponse&lt;Guid&gt;&gt;.</returns>
 		private static async Task<ODataSingleValueResponse<Guid>> PostInventory(Inventory newItem)
 		{
 			await SetAuthHeader();
@@ -314,6 +388,11 @@ namespace IOSCorp.SDK
 			return JsonConvert.DeserializeObject<ODataSingleValueResponse<Guid>>(await response.Content.ReadAsStringAsync());
 		}
 
+		/// <summary>
+		/// Puts the inventory.
+		/// </summary>
+		/// <param name="inventory">The inventory.</param>
+		/// <returns>Task&lt;System.Boolean&gt;.</returns>
 		private static async Task<bool> PutInventory(Inventory inventory)
 		{
 			await SetAuthHeader();
@@ -324,8 +403,111 @@ namespace IOSCorp.SDK
 
 		#endregion
 
+		#region HTTP Depletion interface using OData API
+
+		/// <summary>
+		/// Depletions the interface.
+		/// </summary>
+		/// <returns>Task.</returns>
+		private static async Task DepletionInterface()
+		{
+			//Only Facility No is required for usage creation
+			var usageA = new Usage { FacilityNo = "Facility No" };
+			var usageB = new Usage { FacilityNo = "Facility No" };
+			var usageList = new List<Usage> { usageA, usageB };
+
+			// Result is list of usage Ids joined by ',' seperator
+			var usages = PostUsages(usageList).Result.Split(',').ToList();
+
+			var usagePK = Guid.Parse(usages.FirstOrDefault());
+
+			// Usage Id is required for item insert, in this case free-form item will be created
+			var usageLineItemA = new UsageItem { UsageId = usagePK };
+			var usageLineItemB = new UsageItem { UsageId = usagePK };
+			var usageLineItemList = new List<UsageItem> { usageLineItemA, usageLineItemB };
+
+			await PostUsageItems(usageLineItemList);
+
+			// Usage ID and Procedure No are required for usage procedure creation
+			var usageProcedureA = new UsageProcedure { UsageId = usagePK, ProcedureNo = "ProcedureNo A" };
+			var usageProcedureB = new UsageProcedure { UsageId = usagePK, ProcedureNo = "ProcedureNo B" };
+			var usageProcedureList = new List<UsageProcedure> { usageProcedureA, usageProcedureB };
+
+			await PostUsageProcedures(usageProcedureList);
+
+			// Usage Id is required for usage submit
+			var usageSubmitA = new Usage { UsageId = usagePK };
+			var usageSubmitB = new Usage { UsageId = Guid.Parse(usages[1]) };
+			var usageSubmitList = new List<Usage> { usageSubmitA, usageSubmitB };
+
+			// Result is list of dictionary <Guid,string>, where Guid is unsubmitted usage Id and message with error description
+			// In success case result will be empty
+			var result = SubmitUsages(usageSubmitList).Result;
+		}
+
+		/// <summary>
+		/// Create usages.
+		/// </summary>
+		/// <param name="usages">List of usages.</param>
+		/// <returns>Ids of new created Usages - string of Guid joined by ",".</returns>
+		public static async Task<string> PostUsages(List<Usage> usages)
+		{
+			await SetAuthHeader();
+			var content = new StringContent(Serialize(new { usages }), Encoding.UTF8, "application/json");
+			var response = await Client.PostAsync($"/odata/Usages/BulkAdd", content);
+			return JsonConvert.DeserializeObject<ODataSingleValueResponse<string>>(await response.Content.ReadAsStringAsync()).Value;
+		}
+	
+		/// <summary>
+		/// Posts the usage items.
+		/// </summary>
+		/// <param name="usageItems">List of usage items.</param>
+		/// <returns>Id of new created Usage Items.</returns>
+		public static async Task PostUsageItems(List<UsageItem> usageItems)
+		{
+			await SetAuthHeader();
+			var content = new StringContent(Serialize(new { usageItems }), Encoding.UTF8, "application/json");
+			var response = await Client.PostAsync("/odata/UsageItems/BulkAdd", content);
+			await response.Content.ReadAsStringAsync();
+		}
+
+		/// <summary>
+		/// Posts the usage procedures.
+		/// </summary>
+		/// <param name="usageProcedures">List of usage procedures.</param>
+		/// <returns>Id of new created Usage Procedures.</returns>
+		public static async Task PostUsageProcedures(List<UsageProcedure> usageProcedures)
+		{
+			await SetAuthHeader();
+			var content = new StringContent(Serialize(new { usageProcedures }), Encoding.UTF8, "application/json");
+			var response = await Client.PostAsync("/odata/UsageProcedures/BulkAdd", content);
+			await response.Content.ReadAsStringAsync();
+		}
+
+		/// <summary>
+		/// Submits the usages.
+		/// </summary>
+		/// <param name="usageIds">List of usages.</param>
+		/// <returns>Result of usages submittions.</returns>
+		public static async Task<Dictionary<Guid, string>> SubmitUsages(List<Usage> usageIds)
+		{
+			await SetAuthHeader();
+			var content = new StringContent(Serialize(new { usageIds }), Encoding.UTF8, "application/json");
+			var response = await Client.PostAsync("/odata/Usages/BulkSubmit", content);
+			return JsonConvert.DeserializeObject<Dictionary<Guid, string>>(
+				JsonConvert.DeserializeObject<ODataErrorResponse>(await response.Content.ReadAsStringAsync())
+					.Description
+					.Message);
+		}
+
+		#endregion
+
 		#region Odata Query Options Examples
 
+		/// <summary>
+		/// Formats the examples.
+		/// </summary>
+		/// <returns>Task.</returns>
 		private static async Task FormatExamples()
 		{
 			var inventoryUrl = "/odata/Inventory";
@@ -358,6 +540,10 @@ namespace IOSCorp.SDK
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(stringResult);
 		}
 
+		/// <summary>
+		/// Searches the examples.
+		/// </summary>
+		/// <returns>Task.</returns>
 		private static async Task SearchExamples()
 		{
 			var inventoryUrl = "/odata/Inventory";
@@ -369,6 +555,10 @@ namespace IOSCorp.SDK
 			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 		}
 
+		/// <summary>
+		/// Filterings the examples.
+		/// </summary>
+		/// <returns>Task.</returns>
 		private static async Task FilteringExamples()
 		{
 			var inventoryUrl = "/odata/Inventory";
@@ -394,6 +584,10 @@ namespace IOSCorp.SDK
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 		}
 
+		/// <summary>
+		/// Converts to pskipexamples.
+		/// </summary>
+		/// <returns>Task.</returns>
 		private static async Task TopSkipExamples()
 		{
 			var inventoryUrl = "/odata/Inventory";
@@ -413,6 +607,10 @@ namespace IOSCorp.SDK
 			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
 		}
 
+		/// <summary>
+		/// Orders the by examples.
+		/// </summary>
+		/// <returns>Task.</returns>
 		private static async Task OrderByExamples()
 		{
 			var inventoryUrl = "/odata/Inventory";
@@ -434,8 +632,14 @@ namespace IOSCorp.SDK
 
 		#endregion
 
+		#region Private Methods
+
+		/// <summary>
+		/// Gets the new inventory.
+		/// </summary>
+		/// <returns>Retrun new Inventory.</returns>
 		private static Inventory GetNewInventory()
-	    {
+		{
 			var inventory = new Inventory
 			{
 				InventoryGroupId = new Guid("88212fc1-7698-40b3-8642-edd4ff793fcd"),
@@ -446,45 +650,60 @@ namespace IOSCorp.SDK
 				ActiveStatus = true
 			};
 
-		    return inventory;
-	    }
+			return inventory;
+		}
 
-	    private static string Serialize<T>(T target)
-	    {
+		/// <summary>
+		/// Serializes the specified target.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="target">The target.</param>
+		/// <returns>System.String.</returns>
+		private static string Serialize<T>(T target)
+		{
 			var serializerSettings = new JsonSerializerSettings
 			{
 				ContractResolver = new CamelCasePropertyNamesContractResolver(),
 				NullValueHandling = NullValueHandling.Ignore
 			};
 
-		    return JsonConvert.SerializeObject(target, serializerSettings);
-	    }
+			return JsonConvert.SerializeObject(target, serializerSettings);
+		}
 
-	    private static async Task<bool> SetAuthHeader()
-        {
-	        var auth = await GetToken();
-	        if (auth != null)
-	        {
-		        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", auth.AccessToken);
-	        }
+		/// <summary>
+		/// Sets the authentication header.
+		/// </summary>
+		private static async Task<bool> SetAuthHeader()
+		{
+			var auth = await GetToken();
+			if (auth != null)
+			{
+				Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", auth.AccessToken);
+			}
 
-	        return auth != null;
-        }
+			return auth != null;
+		}
 
-        private static HttpClient Client
-        {
-            get
-            {
-                if (_client == null)
-                {
+		/// <summary>
+		/// Gets the client.
+		/// </summary>
+		/// <value>The HTTP client.</value>
+		private static HttpClient Client
+		{
+			get
+			{
+				if (_client == null)
+				{
 					_client = new HttpClient {
-                        BaseAddress = new Uri(_baseAddress)
-                    };
-                    _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                }
-                return _client;
-            }
-        }
-    }
+						BaseAddress = new Uri(_baseAddress)
+					};
+					_client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				}
+				return _client;
+			}
+		}
+
+		#endregion
+	}
 }
 
