@@ -181,10 +181,5 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// Purchasing Units
 		/// </summary>
 		public List<InventoryVendorPurchasingUnit> PurchasingUnits { get; set; }
-
-		/// <summary>
-		/// Lead time
-		/// </summary>
-		public int? LeadTime { get; set; }
 	}
 }

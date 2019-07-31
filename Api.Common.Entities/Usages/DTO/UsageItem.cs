@@ -73,6 +73,16 @@ namespace Api.Common.Entities.Usages.DTO
 		public decimal? ExtendedPrice { get; set; }
 
 		/// <summary>
+		/// Get or set the unit cost  value.
+		/// </summary>
+		public decimal Cost { get; set; }
+
+		/// <summary>
+		/// Get or set the extended cost value.
+		/// </summary>
+		public decimal ExtendedCost { get; set; }
+
+		/// <summary>
 		/// Get the patient value.
 		/// </summary>
 		public string Patient { get; set; }
@@ -150,7 +160,7 @@ namespace Api.Common.Entities.Usages.DTO
 		/// <summary>
 		/// Get or set the manufacturer value.
 		/// </summary>
-		public string Manufacturer { get; set; }
+		public string ManufacturerNo { get; set; }
 
 		/// <summary>
 		/// Get or set the manufacturer item no value.
@@ -191,5 +201,10 @@ namespace Api.Common.Entities.Usages.DTO
 		/// Get the usage ID value.
 		/// </summary>
 		public Guid? UsageId { get; set; }
+
+		/// <summary>
+		/// UsageNo
+		/// </summary>
+		public string UsageNo { get; set; }
 	}
 }

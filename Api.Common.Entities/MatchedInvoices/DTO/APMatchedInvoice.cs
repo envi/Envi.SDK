@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Api.Common.Entities.MatchedInvoices.DTO
 {
@@ -157,7 +158,7 @@ namespace Api.Common.Entities.MatchedInvoices.DTO
 		/// <summary>
 		/// Gets or sets a invoice Validation Total.
 		/// </summary>
-		public decimal InvoiceValidationTotal { get; set; }
+		public decimal? InvoiceValidationTotal { get; set; }
 
 		/// <summary>
 		/// Gets or sets a cer No Id.
@@ -278,6 +279,11 @@ namespace Api.Common.Entities.MatchedInvoices.DTO
 		/// Gets or sets a submitted By User Name.
 		/// </summary>
 		public string SubmittedByUserName { get; set; }
+
+		/// <summary>
+		/// Gets or sets the matched invoice items.
+		/// </summary>
+		public List<APMatchedInvoiceItem> MatchedInvoiceItems { get; set; }
 
 		#endregion
 	}

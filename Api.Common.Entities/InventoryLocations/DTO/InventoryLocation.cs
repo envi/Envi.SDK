@@ -259,7 +259,12 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// Holds Cross Reference No value 
 		/// </summary>
 		public string CrossReferenceNo { get; set; }
-		
+
+		/// <summary>
+		/// Gets or sets a value indicating whether [inventory active status].
+		/// </summary>
+		public bool InventoryActiveStatus { get; set; }
+
 		/// <summary>
 		/// Cost Layers
 		/// </summary>

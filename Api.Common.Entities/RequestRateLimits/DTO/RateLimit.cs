@@ -3,9 +3,8 @@ using System;
 
 namespace Api.Common.Entities.RequestRateLimits.DTO
 {
-
 	/// <summary>
-	/// Class RateLimit.
+	/// Represents Request Rate Limit setting for an user/organization or global one
 	/// </summary>
 	public class RateLimit
 	{

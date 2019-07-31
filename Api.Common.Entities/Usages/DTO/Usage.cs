@@ -2,13 +2,10 @@
 
 namespace Api.Common.Entities.Usages.DTO
 {
-	/// <summary>
-	/// Class Usage.
-	/// </summary>
 	public class Usage
 	{
 		/// <summary>
-		/// Gets or sets the usage identifier.
+		/// Usage identidier
 		/// </summary>
 		public Guid? UsageId { get; set; }
 
@@ -18,88 +15,87 @@ namespace Api.Common.Entities.Usages.DTO
 		public int? UsageOrdinalNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the facility no.
+		/// Holds facility No of the usage
 		/// </summary>
 		public string FacilityNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the name of the facility.
+		/// Holds facility Name of the usage
 		/// </summary>
 		public string FacilityName { get; set; }
 
 		/// <summary>
-		/// Gets or sets the department no.
+		/// Holds Department No of the usage
 		/// </summary>
 		public string DepartmentNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the name of the department.
+		/// Holds Department Name of the usage
 		/// </summary>
 		public string DepartmentName { get; set; }
 
-
 		/// <summary>
-		/// Gets or sets the patient no.
+		/// Patient number
 		/// </summary>
 		public string PatientNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the usage no.
+		/// Usage number.
 		/// </summary>
 		public string UsageNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the physician no.
+		/// Holds Physician Number
 		/// </summary>
 		public string PhysicianNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the schedule no.
+		/// Holds Schedule Number
 		/// </summary>
 		public string ScheduleNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the first name of the physician.
+		/// Holds First Name of a Physician
 		/// </summary>
 		public string PhysicianFirstName { get; set; }
 
 		/// <summary>
-		/// Gets or sets the last name of the physician.
+		/// Holds Last Name of a Physician
 		/// </summary>
 		public string PhysicianLastName { get; set; }
 
 		/// <summary>
-		/// Gets or sets the usage date.
+		/// Usage Date.
 		/// </summary>
 		public DateTime? UsageDate { get; set; }
 
 		/// <summary>
-		/// Gets or sets the type of the usage.
+		/// Holds Usage Type
 		/// </summary>
 		public byte? UsageType { get; set; }
 
 		/// <summary>
-		/// Gets or sets the case no.
+		/// Case number
 		/// </summary>
 		public string CaseNo { get; set; }
 
 		/// <summary>
-		/// Gets or sets the department identifier.
+		/// Holds department PK
 		/// </summary>
 		public Guid? DepartmentId { get; set; }
 
 		/// <summary>
-		/// Gets or sets the facility identifier.
+		/// Holds FacilityPK
 		/// </summary>
 		public Guid? FacilityId { get; set; }
 
 		/// <summary>
-		/// Gets or sets the reference.
+		/// Usage's Reference
 		/// </summary>
 		public string Reference { get; set; }
 
 		/// <summary>
-		/// Gets or sets the tracking code.
+		/// Usage's Tracking Code
 		/// </summary>
 		public string TrackingCode { get; set; }
 	}

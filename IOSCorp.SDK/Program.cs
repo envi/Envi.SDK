@@ -314,7 +314,7 @@ namespace IOSCorp.SDK
 			Inventory inventory = await GetInventoryById(response.Value);
 
 			inventory.HCPCSCode = "H0001";
-			inventory.UNSPSC = "41120000";
+			inventory.UNSPSCCode = "41120000";
 
 			if (await PutInventory(inventory))
 			{
@@ -416,7 +416,7 @@ namespace IOSCorp.SDK
 			var usageB = new Usage { FacilityNo = "Facility No" };
 			var usageList = new List<Usage> { usageA, usageB };
 
-			// Result is list of usage Ids joined by ',' seperator
+			// Result is list of usage Ids joined by ',' separator
 			var usages = PostUsages(usageList).Result.Split(',').ToList();
 
 			var usagePK = Guid.Parse(usages.FirstOrDefault());

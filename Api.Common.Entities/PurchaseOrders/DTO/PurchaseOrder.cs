@@ -5,9 +5,8 @@ using PurchaseOrderItemDTO = Api.Common.Entities.PurchaseOrders.DTO.PurchaseOrde
 
 namespace Api.Common.Entities.PurchaseOrders.DTO
 {
-
 	/// <summary>
-	/// Class PurchaseOrder.
+	/// Purchase Order DTO (OData)
 	/// </summary>
 	public class PurchaseOrder
 	{
@@ -427,7 +426,7 @@ namespace Api.Common.Entities.PurchaseOrders.DTO
 		public string ShippingType { get; set; }
 
 		/// <summary>
-		/// Gets or sets the purchase order items.
+		/// PO child entity. Is needed for correct work of odata endpoint with purchaseOrderItems segment
 		/// </summary>
 		public List<PurchaseOrderItemDTO> PurchaseOrderItems { get; set; }
 	}

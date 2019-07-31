@@ -2,9 +2,8 @@
 
 namespace Api.Common.Entities.PurchaseOrders.DTO
 {
-
 	/// <summary>
-	/// Class PurchaseOrderItem.
+	/// Purchase Order Item DTO (OData)
 	/// </summary>
 	public class PurchaseOrderItem
 	{

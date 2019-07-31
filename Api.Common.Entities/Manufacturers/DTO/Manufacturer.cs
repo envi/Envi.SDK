@@ -59,5 +59,9 @@ namespace Api.Common.Entities.Manufacturers.DTO
 		/// Gets or sets the last name of the updated by.
 		/// </summary>
 		public string LastUpdatedByName { get; set; }
+		/// <summary>
+		/// Gets or sets external mfg no
+		/// </summary>
+		public string ExternalMfgNo { get; set; }
 	}
 }
