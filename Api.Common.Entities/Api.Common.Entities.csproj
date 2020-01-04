@@ -68,6 +68,7 @@
     <Compile Include="Manufacturers\DTO\Manufacturer.cs" />
     <Compile Include="MatchedInvoices\DTO\APMatchedInvoice.cs" />
     <Compile Include="MatchedInvoices\DTO\APMatchedInvoiceItem.cs" />
+    <Compile Include="PARAreas\DTO\PARArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PurchaseOrders\DTO\PurchaseOrder.cs" />
     <Compile Include="PurchaseOrders\DTO\PurchaseOrderItem.cs" />

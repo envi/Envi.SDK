@@ -17,5 +17,11 @@
 		/// Dates
 		/// </summary>
 		public string Dates { get; set; }
+
+
+		/// <summary>
+		/// FacilityIds
+		/// </summary>
+		public string FacilityIds { get; set; }
 	}
 }

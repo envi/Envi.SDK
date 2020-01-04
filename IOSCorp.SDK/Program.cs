@@ -1,5 +1,4 @@
 ﻿using Api.Common.Entities.Inventory.DTO;
-using IOSCorp.SDK.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -9,8 +8,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Api.Common.Entities.APBatch.DTO;
 using Api.Common.Entities.InventoryLocations.DTO;
 using Api.Common.Entities.InventoryVendors.DTO;
+using Api.Common.Entities.Receiving.DTO;
 using Api.Common.Entities.Usages.DTO;
 using Api.Common.Entities.Vendors.DTO;
 
@@ -27,6 +28,21 @@ namespace IOSCorp.SDK
 		/// Base address of OData API Service
 		/// </summary>
 		private static readonly string _baseAddress = "https://API_HOST_NAME";
+
+		/// <summary>
+		/// Password
+		/// </summary>
+		private static readonly string _password = "password";
+
+		/// <summary>
+		/// User Name
+		/// </summary>
+		private static readonly string _username = "username";
+
+		/// <summary>
+		/// client_id
+		/// </summary>
+		private static readonly string _clientId = "client_id";
 
 		/// <summary>
 		/// Holds instance of correctly initialized HTTP Client
@@ -52,21 +68,23 @@ namespace IOSCorp.SDK
 			{
 				List<KeyValuePair<string, string>> requestData = new List<KeyValuePair<string, string>> {
 					new KeyValuePair<string, string>("grant_type", "password"),
-					new KeyValuePair<string, string>("client_id", "099153c2625149bc8ecb3e85e03f0022"),
-					new KeyValuePair<string, string>("username", "USER_NAME"),
-					new KeyValuePair<string, string>("password", "PASSWORD")
+					new KeyValuePair<string, string>("client_id", _clientId),
+					new KeyValuePair<string, string>("username", _username),
+					new KeyValuePair<string, string>("password", _password)
 				};
 				_token = await RequestToken(requestData);
 			}
+
 			if (!_token.IsValid)
 			{
 				List<KeyValuePair<string, string>> requestData = new List<KeyValuePair<string, string>> {
 					new KeyValuePair<string, string>("grant_type", "refresh_token"),
-					new KeyValuePair<string, string>("client_id", "099153c2625149bc8ecb3e85e03f0022"),
+					new KeyValuePair<string, string>("client_id", _clientId),
 					new KeyValuePair<string, string>("refresh_token", _token.RefreshToken)
 				};
 				_token = await RequestToken(requestData);
 			}
+
 			return _token;
 		}
 
@@ -135,49 +153,46 @@ namespace IOSCorp.SDK
 			const string VENDORS_URL_TMPL = "/odata/Vendors/GetVendorsInfo(facilityId={0})";
 			const string DATE_FORMAT = "yyyy-MM-dd";
 
-			//Obtain JWT token and set access token to authorization header
-			await SetAuthHeader();
+			var client = new EnviODataClient(_baseAddress, _clientId, _username, _password);
 
 			//Retrieving of Inventory Info
 			var inventoryUrl = string.Format(INVNTORY_URL_TMPL,
 				lastRunDate.ToString(DATE_FORMAT),
 				facilityPK?.ToString() ?? "null",
 				syncFlag?.ToString() ?? "null");
-			var response = await Client.GetAsync(inventoryUrl);
-			var inventoryResult = await response.Content.ReadAsStringAsync();
-			var inventory = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(inventoryResult).Value;
+			var inventoryResponse = await client.Get<ODataListResponse<Inventory>>(inventoryUrl);
 
 			// Retrieving of corresponding Inventory/Locations
 			var inventoryLocationsUrl = string.Format(INVNTORY_LOCATIONS_URL_TMPL,
 				lastRunDate.ToString(DATE_FORMAT),
 				facilityPK?.ToString() ?? "null",
 				syncFlag?.ToString() ?? "null");
-			response = await Client.GetAsync(inventoryLocationsUrl);
-			var inventoryLocationsResult = await response.Content.ReadAsStringAsync();
-			var inventoryLocations = JsonConvert.DeserializeObject<ODataListResponse<InventoryLocation>>(inventoryLocationsResult).Value;
+			var inventoryLocationsResponse = await client.Get<ODataListResponse<InventoryLocation>>(inventoryLocationsUrl);
 
 			// Retrieving of corresponding Inventory/Vendors
 			var inventoryVendorsUrl = string.Format(INVNTORY_VENDORS_URL_TMPL,
 				lastRunDate.ToString(DATE_FORMAT),
 				facilityPK?.ToString() ?? "null",
 				syncFlag?.ToString() ?? "null");
-			response = await Client.GetAsync(inventoryVendorsUrl);
-			var inventoryVenorsResult = await response.Content.ReadAsStringAsync();
-			var inventoryVendors = JsonConvert.DeserializeObject<ODataListResponse<InventoryVendor>>(inventoryVenorsResult).Value;
+			var inventoryVendorsResponse = await client.Get<ODataListResponse<InventoryVendor>>(inventoryVendorsUrl);
+
+			// Getting information combined (adding of Inventory/Vendors and Inventory/Locations to corresponding Inventory)
+			inventoryResponse.Value.ForEach(i => i.InventoryLocations = new List<InventoryLocation>(inventoryLocationsResponse.Value.Where(il => il.InventoryId == i.InventoryId).ToList()));
+			inventoryResponse.Value.ForEach(i => i.InventoryVendors = new List<InventoryVendor>(inventoryVendorsResponse.Value.Where(iv => iv.InventoryId == i.InventoryId).ToList()));
 
 			// Retrieving of resulting Vendor Ids
-			var vendorIds = inventoryVendors.GroupBy(pk => pk.VendorId).Select(g => g.Key).ToList();
+			var vendorIds = inventoryVendorsResponse.Value.GroupBy(pk => pk.VendorId).Select(g => g.Key).ToList();
 
 			// Retrieving of Vendors information
 			var vendorsUrl = string.Format(VENDORS_URL_TMPL, facilityPK?.ToString() ?? "null");
-			var content = new StringContent(Serialize(new ListRepresentation<Guid?> { Value = vendorIds }), Encoding.UTF8, "application/json");
-			response = await Client.PostAsync(vendorsUrl, content);
-			var vendorsResult = await response.Content.ReadAsStringAsync();
-			var vendors = JsonConvert.DeserializeObject<ODataListResponse<VendorInfo>>(vendorsResult).Value;
+			var idList = new ListRepresentation<Guid?> { Value = vendorIds };
+			var vendorsResponse = await client.Post<ListRepresentation<Guid?>, ODataListResponse<VendorInfo>>(vendorsUrl, idList);
 
-			// Getting information combined (adding of Inventory/Vendors and Inventory/Locations to corresponding Inventory)
-			inventory.ForEach(i => i.InventoryLocations = new List<InventoryLocation>(inventoryLocations.Where(il => il.InventoryId == i.InventoryId).ToList()));
-			inventory.ForEach(i => i.InventoryVendors = new List<InventoryVendor>(inventoryVendors.Where(iv => iv.InventoryId == i.InventoryId).ToList()));
+			//Interface data consists of two lists:
+			var vendors = vendorsResponse.Value;
+			var inventory = inventoryResponse.Value;
+
+			await Task.FromResult(0);
 		}
 
 		#endregion
@@ -190,13 +205,19 @@ namespace IOSCorp.SDK
 		/// <returns>Task.</returns>
 		private static async Task BatchExample()
 		{
-			var batchUrl = $"{_baseAddress}/odata/$batch";
+			var batchUrl = $"{_baseAddress}/odata/$batches";
 			// Global batch request
 			var batchRequest = new HttpRequestMessage(HttpMethod.Post, batchUrl);
 			batchRequest.Headers.Authorization = new AuthenticationHeaderValue("bearer", (await GetToken()).AccessToken);
-			
+
+			//POST Request
+			//Create Batch Model
+			var newBatch = new APBatch { BatchNo = "Batch No" };
+			//Send request
+			var batchPK = (await PostBatch(newBatch)).Value;
+
 			// Multiple GET Requests
-			var batchContent = new MultipartContent("mixed", $"batch_{Guid.NewGuid()}")
+			var batchContent = new MultipartContent("mixed", $"batches_{Guid.NewGuid()}")
 			{
 				ComposeGetContent($"{_baseAddress}/odata/Inventory({new Guid("4311192f-c46f-4655-8d51-fc2f49aabf78")})"),
 				ComposeGetContent($"{_baseAddress}/odata/Inventory({new Guid("71395601-8db7-4f3a-b466-106663990c90")})"),
@@ -289,6 +310,19 @@ namespace IOSCorp.SDK
 			return postContent;
 		}
 
+		/// <summary>
+		/// Create batch.
+		/// </summary>
+		/// <param name="batch">List of usages.</param>
+		/// <returns>Id of new created batch - Guid.</returns>
+		public static async Task<ODataSingleValueResponse<Guid>> PostBatch(APBatch batch)
+		{
+			await SetAuthHeader();
+			var content = new StringContent(Serialize(batch), Encoding.UTF8, "application/json");
+			var response = await Client.PostAsync($"/odata/Batches", content);
+			return JsonConvert.DeserializeObject<ODataSingleValueResponse<Guid>>(await response.Content.ReadAsStringAsync());
+		}
+
 		#endregion
 
 		#region Inventory Examples
@@ -299,42 +333,43 @@ namespace IOSCorp.SDK
 		/// <returns>Task.</returns>
 		private static async Task InventoryExamples()
 		{
-			Inventory inventoryById = null;
-			var inventoryList = await GetInventoryList();
+			var client = new EnviODataClient(_baseAddress, _clientId, _username, _password);
 
-			var inventoryId = inventoryList.Value[0].InventoryId;
+			var inventoryList = await client.Get<ODataListResponse<Inventory>>("/odata/Inventory");
+
+			var inventoryId = inventoryList.Value[0].InventoryId; ;
 			if (inventoryId != null)
 			{
-				inventoryById = await GetInventoryById(inventoryId.Value);
+				var inventoryById = await GetInventoryById(inventoryId.Value);
 			}
 			
 			var newItem = GetNewInventory();
-			var response = await PostInventory(newItem);
+			var response = await client.Post<Inventory, ODataSingleValueResponse<Guid>>("/odata/Inventory", newItem);
 
-			Inventory inventory = await GetInventoryById(response.Value);
+			var inventory = await client.Get<Inventory>($"/odata/Inventory({response.Value})");
 
 			inventory.HCPCSCode = "H0001";
 			inventory.UNSPSCCode = "41120000";
 
-			if (await PutInventory(inventory))
+			var success = await client.Put<Inventory>($"/odata/Inventory({inventory.InventoryId.Value})", inventory);
+			if (success)
 			{
 				if (inventory.InventoryId != null)
 				{
-					Inventory inventory5 = await GetInventoryById(inventory.InventoryId.Value);
+					var inventoryById = await client.Get<Inventory>($"/odata/Inventory({inventory.InventoryId.Value})");
 				}
 			}
 
 			Inventory patch = new Inventory
 			{
-				InventoryNo = "78-95-1938"
+				UNSPSCCode = "41120000ch"
 			};
-			
-			if (inventory.InventoryId != null && await PatchInventory(inventory.InventoryId.Value, patch))
+
+			success = await client.Patch<Inventory>($"/odata/Inventory({inventory.InventoryId.Value})", patch);
+
+			if (inventory.InventoryId != null && success)
 			{
-				if (patch.InventoryId != null)
-				{
-					Inventory inventory6 = await GetInventoryById(patch.InventoryId.Value);
-				}
+				var inventoryById = await client.Get<Inventory>($"/odata/Inventory({inventory.InventoryId.Value})");
 			}
 		}
 
@@ -342,63 +377,12 @@ namespace IOSCorp.SDK
 		/// Gets the inventory by identifier.
 		/// </summary>
 		/// <param name="inventoryId">The inventory identifier.</param>
-		/// <returns>Task&lt;Inventory&gt;.</returns>
+		/// <returns>Inventory.</returns>
 		private static async Task<Inventory> GetInventoryById(Guid inventoryId)
 		{
 			await SetAuthHeader();
 			var response = await Client.GetAsync($"/odata/Inventory({inventoryId})");
 			return JsonConvert.DeserializeObject<Inventory>(await response.Content.ReadAsStringAsync());
-		}
-
-		/// <summary>
-		/// Gets the inventory list.
-		/// </summary>
-		/// <returns>Task&lt;ODataListResponse&lt;Inventory&gt;&gt;.</returns>
-		private static async Task<ODataListResponse<Inventory>> GetInventoryList()
-		{
-			await SetAuthHeader();
-			var response = await Client.GetAsync("/odata/Inventory");
-			return JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
-		}
-
-		/// <summary>
-		/// Patches the inventory.
-		/// </summary>
-		/// <param name="entityId">The entity identifier.</param>
-		/// <param name="patch">The patch.</param>
-		/// <returns>Task&lt;System.Boolean&gt;.</returns>
-		private static async Task<bool> PatchInventory(Guid entityId, Inventory patch)
-		{
-			await SetAuthHeader();
-			var content = new StringContent(Serialize(patch), Encoding.UTF8, "application/json");
-			var response = await Client.PatchAsync($"odata/Inventory({entityId})", content);
-			return response.IsSuccessStatusCode;
-		}
-
-		/// <summary>
-		/// Posts the inventory.
-		/// </summary>
-		/// <param name="newItem">The new item.</param>
-		/// <returns>Task&lt;ODataSingleValueResponse&lt;Guid&gt;&gt;.</returns>
-		private static async Task<ODataSingleValueResponse<Guid>> PostInventory(Inventory newItem)
-		{
-			await SetAuthHeader();
-			var content = new StringContent(Serialize(newItem), Encoding.UTF8, "application/json");
-			var response = await Client.PostAsync("/odata/Inventory", content);
-			return JsonConvert.DeserializeObject<ODataSingleValueResponse<Guid>>(await response.Content.ReadAsStringAsync());
-		}
-
-		/// <summary>
-		/// Puts the inventory.
-		/// </summary>
-		/// <param name="inventory">The inventory.</param>
-		/// <returns>Task&lt;System.Boolean&gt;.</returns>
-		private static async Task<bool> PutInventory(Inventory inventory)
-		{
-			await SetAuthHeader();
-			var content = new StringContent(Serialize(inventory), Encoding.UTF8, "application/json");
-			var response = await Client.PutAsync($"odata/Inventory({inventory.InventoryId})", content);
-			return response.IsSuccessStatusCode;
 		}
 
 		#endregion
@@ -556,36 +540,77 @@ namespace IOSCorp.SDK
 		}
 
 		/// <summary>
-		/// Filterings the examples.
+		/// Filtering the examples.
 		/// </summary>
 		/// <returns>Task.</returns>
 		private static async Task FilteringExamples()
 		{
-			var inventoryUrl = "/odata/Inventory";
+			var receiptsUrl = "/odata/Receipts";
+
 			//Obtain JWT token and set access token to authorization header
 			await SetAuthHeader();
 
-			// filtering by inventoryDescription field with strict match
-			var response = await Client.GetAsync($"{inventoryUrl}?$filter=inventoryDescription eq 'test'");
-			var result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+			// filtering by facilityNo field with strict match
+			var response = await Client.GetAsync($"{receiptsUrl}?$filter=facilityNo eq 'test'");
+			var result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
 
-			// filtering by inventoryDescription field with LIKE expression
-			response = await Client.GetAsync($"{inventoryUrl}?$filter=contains(inventoryDescription,'test')");
-			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+			// filtering by facilityNo field with LIKE expression
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=contains(facilityNo,'test')");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
 
-			// filtering by inventoryNo field with LIKE expression and by classificationName field with strict match
+			// filtering by facilityNo field with LIKE expression and by vendorName field with strict match
 			// Note: Mix of AND/OR statements in one query is not supported.
-			response = await Client.GetAsync($"{inventoryUrl}?$filter=contains(inventoryNo,'inv') AND classificationName eq 'medication'");
-			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=contains(facilityNo,'TestFacility') AND vendorName eq 'TestVendor'");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
 
-			// filtering by classificationName field with strict match or by systemType field with strict match
+			// filtering by vendorName field with strict match or by buyerName field with strict match
 			// Note: Mix of AND/OR statements in one query is not supported.
-			response = await Client.GetAsync($"{inventoryUrl}?$filter=classificationName eq 'medication' OR systemType eq 'implant'");
-			result = JsonConvert.DeserializeObject<ODataListResponse<Inventory>>(await response.Content.ReadAsStringAsync());
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=vendorName eq 'medication' OR buyerName eq 'Jack Winston'");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by dateAdded field with 'IN' operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=dateAdded in ('2019-06-23', '2019-06-25', '2019-06-27')");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by sequenceNo field with 'IN' operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=sequenceNo in ('1563', '10', '50')");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by leadTime field with 'lt' (less than) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=leadTime lt 9");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by leadTime field with 'le' (less equal) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=leadTime le 9");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by leadTime field with 'gt' (great than) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=leadTime gt 9");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by leadTime field with 'ge' (great equal) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=leadTime ge 9");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by expectedDeliveryDate field with 'lt' (less than) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=expectedDeliveryDate lt 2019-07-30");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by expectedDeliveryDate field with 'le' (less equal) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=expectedDeliveryDate le 2019-07-30");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by expectedDeliveryDate field with 'gt' (great than) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=expectedDeliveryDate gt 2019-07-30");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
+
+			// filtering by expectedDeliveryDate field with 'ge' (great equal) operator
+			response = await Client.GetAsync($"{receiptsUrl}?$filter=expectedDeliveryDate ge 2019-07-30");
+			result = JsonConvert.DeserializeObject<ODataListResponse<Receipt>>(await response.Content.ReadAsStringAsync());
 		}
 
 		/// <summary>
-		/// Converts to pskipexamples.
+		/// Converts top skipExamples.
 		/// </summary>
 		/// <returns>Task.</returns>
 		private static async Task TopSkipExamples()

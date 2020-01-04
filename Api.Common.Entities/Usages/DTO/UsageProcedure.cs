@@ -2,24 +2,23 @@
 
 namespace Api.Common.Entities.Usages.DTO
 {
-
 	/// <summary>
-	/// Class UsageProcedure.
+	/// Usage Procedure DTO
 	/// </summary>
 	public class UsageProcedure
 	{
 		/// <summary>
-		/// Gets or sets the usage procedure identifier.
+		/// Usage Procedure Id
 		/// </summary>
 		public Guid? UsageProcedureId { get; set; }
 
 		/// <summary>
-		/// Gets or sets the usage identifier.
+		/// Usage Id
 		/// </summary>
 		public Guid? UsageId { get; set; }
 
 		/// <summary>
-		/// Gets or sets the procedure no.
+		/// Holds Procedure No to add
 		/// </summary>
 		public string ProcedureNo { get; set; }
 	}

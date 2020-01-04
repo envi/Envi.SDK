@@ -19,4 +19,3 @@ namespace IOSCorp.SDK
 		public T Value { get; set; }
 	}
 }
-

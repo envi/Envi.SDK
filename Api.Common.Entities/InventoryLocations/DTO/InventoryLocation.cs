@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
 namespace Api.Common.Entities.InventoryLocations.DTO
 {
 	public class InventoryLocation 
@@ -206,9 +205,25 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		public bool? ActiveStatus { get; set; }
 
 		/// <summary>
-		/// Cost Synchronization Date value
+		/// Location Synchronization Date value
 		/// </summary>
-		public DateTime? CostSynchronizationDate { get; set; }
+		public DateTime? LocationSynchronizationDate { get; set; }
+
+		/// <summary>
+		/// Gets or sets the cost synchronization date.
+		/// (Just a copy of LocationSynchronizationDate for OData)
+		/// </summary>
+		public DateTime? CostSynchronizationDate
+		{
+			get
+			{
+				return LocationSynchronizationDate;
+			}
+			set
+			{
+				LocationSynchronizationDate = CostSynchronizationDate;
+			} 
+		}
 
 		/// <summary>
 		/// Default Purchase UOM value

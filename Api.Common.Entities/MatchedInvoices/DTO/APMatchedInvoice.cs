@@ -271,6 +271,11 @@ namespace Api.Common.Entities.MatchedInvoices.DTO
 		public string LastUpdatedByUserName { get; set; }
 
 		/// <summary>
+		/// Gets or sets a date submitted.
+		/// </summary>
+		public DateTime? DateSubmitted { get; set; }
+
+		/// <summary>
 		/// Gets or sets a submitted By.
 		/// </summary>
 		public Guid? SubmittedBy { get; set; }

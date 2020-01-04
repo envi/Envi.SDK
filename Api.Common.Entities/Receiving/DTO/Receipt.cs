@@ -104,7 +104,12 @@ namespace Api.Common.Entities.Receiving.DTO
 		public Guid? BuyerId { get; set; }
 
 		/// <summary>
-		/// Gets or sets the name of the buyer user.
+		/// Gets or sets first and last name of the buyer user.
+		/// </summary>
+		public string BuyerName { get; set; }
+
+		/// <summary>
+		/// Gets or sets first and last name of the buyer user.
 		/// </summary>
 		public string BuyerUserName { get; set; }
 
@@ -139,9 +144,14 @@ namespace Api.Common.Entities.Receiving.DTO
 		public Guid? OrderBy { get; set; }
 
 		/// <summary>
-		/// Get or set the name of the order by user.
+		/// Get or set the order by.
 		/// </summary>
 		public string OrderByUserName { get; set; }
+
+		/// <summary>
+		/// Get or set first and last name of the order by user.
+		/// </summary>
+		public string OrderByName { get; set; }
 
 		/// <summary>
 		/// Get or set the packing slip number.
@@ -159,7 +169,12 @@ namespace Api.Common.Entities.Receiving.DTO
 		public Guid? AddedBy { get; set; }
 
 		/// <summary>
-		/// Get or set the name of the added by user.
+		/// Get or set first and last name of the added by user.
+		/// </summary>
+		public string AddedByName { get; set; }
+
+		/// <summary>
+		/// Get or set first and last name of the added by user.
 		/// </summary>
 		public string AddedByUserName { get; set; }
 
@@ -179,7 +194,12 @@ namespace Api.Common.Entities.Receiving.DTO
 		public Guid? ReceivedBy { get; set; }
 
 		/// <summary>
-		/// Get or set the name of the received by user.
+		/// Get or set first and last name of the received by user.
+		/// </summary>
+		public string ReceivedByName { get; set; }
+
+		/// <summary>
+		/// Get or set first and last name of the received by user.
 		/// </summary>
 		public string ReceivedByUserName { get; set; }
 
@@ -204,9 +224,14 @@ namespace Api.Common.Entities.Receiving.DTO
 		public Guid? LastUpdatedBy { get; set; }
 
 		/// <summary>
-		/// Get or set the last name of the updated by user.
+		/// Get or set the last updated by.
 		/// </summary>
 		public string LastUpdatedByUserName { get; set; }
+
+		/// <summary>
+		/// Get or set first and last name of the last updated by user.
+		/// </summary>
+		public string LastUpdatedByName { get; set; }
 
 		/// <summary>
 		/// Get or set the receipt fill status.
