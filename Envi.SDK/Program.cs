@@ -1,7 +1,4 @@
-﻿using Api.Common.Entities.Inventory.DTO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -9,13 +6,16 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Api.Common.Entities.APBatch.DTO;
+using Api.Common.Entities.Inventory.DTO;
 using Api.Common.Entities.InventoryLocations.DTO;
 using Api.Common.Entities.InventoryVendors.DTO;
 using Api.Common.Entities.Receiving.DTO;
 using Api.Common.Entities.Usages.DTO;
 using Api.Common.Entities.Vendors.DTO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
-namespace IOSCorp.SDK
+namespace Envi.SDK
 {
 	/// <summary>
 	/// Class Program.

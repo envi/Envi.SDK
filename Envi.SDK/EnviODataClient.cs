@@ -6,11 +6,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using IOSCorp.SDK.Extensions;
+using Envi.SDK.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace IOSCorp.SDK
+namespace Envi.SDK
 {
 	public class EnviODataClient
 	{

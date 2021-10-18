@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace IOSCorp.SDK.Extensions
+namespace Envi.SDK.Extensions
 {
 	/// <summary>
 	/// Class HttpClientExtensions.

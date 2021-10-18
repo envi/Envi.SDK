@@ -7,8 +7,8 @@
     <ProjectGuid>{28EE0BAF-89DA-44A9-9CDE-8BA840096254}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IOSCorp.SDK</RootNamespace>
-    <AssemblyName>IOSCorp.SDK</AssemblyName>
+    <RootNamespace>Envi.SDK</RootNamespace>
+    <AssemblyName>Envi.SDK</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

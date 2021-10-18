@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace IOSCorp.SDK
+namespace Envi.SDK
 {
 	/// <summary>
 	/// Class ODataListResponse.

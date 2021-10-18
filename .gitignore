@@ -1,6 +1,5 @@
 .vs/
-Api.Common.Entities/obj/
-IOSCorp.SDK/obj/
 packages/
-Api.Common.Entities/bin/
-IOSCorp.SDK/bin/
+*.csproj.user
+*/bin/*
+*/obj/*

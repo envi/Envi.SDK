@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2011
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Common.Entities", "Api.Common.Entities\Api.Common.Entities.csproj", "{6DFA08B9-0760-4E26-A64E-1E3503BAB062}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOSCorp.SDK", "IOSCorp.SDK\IOSCorp.SDK.csproj", "{28EE0BAF-89DA-44A9-9CDE-8BA840096254}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envi.SDK", "Envi.SDK\Envi.SDK.csproj", "{28EE0BAF-89DA-44A9-9CDE-8BA840096254}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace IOSCorp.SDK
+namespace Envi.SDK
 {
 	/// <summary>
 	/// Class ODataSingleValueResponse.
