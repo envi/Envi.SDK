@@ -45,7 +45,7 @@ namespace Api.Common.Entities.Usages.DTO
 		/// <summary>
 		/// Get the Usage Item created date value.
 		/// </summary>
-		public DateTime? Date { get; set; }
+		public DateTimeOffset? Date { get; set; }
 
 		/// <summary>
 		/// Get or set the case no value.
@@ -56,12 +56,12 @@ namespace Api.Common.Entities.Usages.DTO
 		/// Get or set the facility Id value.
 		/// </summary>
 		public Guid? FacilityId { get; set; }
-		
+
 		/// <summary>
 		/// Get the name of the department.
 		/// </summary>
 		public string DepartmentName { get; set; }
-		
+
 		/// <summary>
 		/// Get or set the department Id value.
 		/// </summary>
@@ -75,28 +75,28 @@ namespace Api.Common.Entities.Usages.DTO
 		/// <summary>
 		/// Get or set the unit cost  value.
 		/// </summary>
-		public decimal Cost { get; set; }
+		public decimal? Cost { get; set; }
 
 		/// <summary>
 		/// Get or set the extended cost value.
 		/// </summary>
-		public decimal ExtendedCost { get; set; }
+		public decimal? ExtendedCost { get; set; }
 
 		/// <summary>
 		/// Get the patient value.
 		/// </summary>
 		public string Patient { get; set; }
-		
+
 		/// <summary>
 		/// Get the name of the facility.
 		/// </summary>
 		public string FacilityName { get; set; }
-		
+
 		/// <summary>
 		/// Get the facility no.
 		/// </summary>
 		public string FacilityNo { get; set; }
-		
+
 		/// <summary>
 		/// Get the name of the doctor.
 		/// </summary>
@@ -116,12 +116,12 @@ namespace Api.Common.Entities.Usages.DTO
 		/// Get or set the inventory description value.
 		/// </summary>
 		public string InventoryDescription { get; set; }
-		
+
 		/// <summary>
 		/// Get the classification value.
 		/// </summary>
 		public string Classification { get; set; }
-		
+
 		/// <summary>
 		/// Get or set the classification2 value.
 		/// </summary>
@@ -136,12 +136,12 @@ namespace Api.Common.Entities.Usages.DTO
 		/// Get or set the uom value.
 		/// </summary>
 		public string UOM { get; set; }
-		
+
 		/// <summary>
 		/// Get or set the price value.
 		/// </summary>
 		public decimal? Price { get; set; }
-		
+
 		/// <summary>
 		/// Get or set the conversion factor value.
 		/// </summary>
@@ -151,7 +151,7 @@ namespace Api.Common.Entities.Usages.DTO
 		/// Get the location no value.
 		/// </summary>
 		public string LocationNo { get; set; }
-		
+
 		/// <summary>
 		/// Get the inventory no value.
 		/// </summary>
@@ -171,7 +171,7 @@ namespace Api.Common.Entities.Usages.DTO
 		/// Get or set the tracking lot no value.
 		/// </summary>
 		public string LotNo { get; set; }
-		
+
 		/// <summary>
 		/// Get or set the tracking serial no value.
 		/// </summary>
@@ -180,23 +180,23 @@ namespace Api.Common.Entities.Usages.DTO
 		/// <summary>
 		/// Get or set the tracking expiration date value.
 		/// </summary>
-		public DateTime? ExpirationDate { get; set; }
-		
+		public DateTimeOffset? ExpirationDate { get; set; }
+
 		/// <summary>
 		/// Get or set the item notes.
 		/// </summary>
 		public string ItemNotes { get; set; }
-		
+
 		/// <summary>
 		/// Get the line no value.
 		/// </summary>
 		public int? LineNo { get; set; }
-		
+
 		/// <summary>
 		/// Get or set the usage ordinal no value.
 		/// </summary>
 		public int? UsageOrdinalNo { get; set; }
-		
+
 		/// <summary>
 		/// Get the usage ID value.
 		/// </summary>
@@ -206,5 +206,10 @@ namespace Api.Common.Entities.Usages.DTO
 		/// UsageNo
 		/// </summary>
 		public string UsageNo { get; set; }
+
+		/// <summary>
+		/// Gets or sets the date submitted of usage.
+		/// </summary>
+		public DateTimeOffset? DateSubmitted { get; set; }
 	}
 }

@@ -63,7 +63,7 @@ namespace Api.Common.Entities.InventoryTracking.DTO
 		/// <summary>
 		/// Date this record was first inserted.
 		/// </summary>
-		public DateTime? DateAdded { get; set; }
+		public DateTimeOffset? DateAdded { get; set; }
 
 		/// <summary>
 		/// Indicates which user inserted this record.
@@ -78,7 +78,7 @@ namespace Api.Common.Entities.InventoryTracking.DTO
 		/// <summary>
 		/// Date this record was last updated.
 		/// </summary>
-		public DateTime? LastUpdated { get; set; }
+		public DateTimeOffset? LastUpdated { get; set; }
 
 		/// <summary>
 		/// Indicates which user last updated this record.

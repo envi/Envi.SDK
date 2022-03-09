@@ -54,6 +54,16 @@ namespace Envi.SDK
 		/// </summary>
 		private static JWT _token;
 
+		/// <summary>
+		/// Holds Inventory Group PK
+		/// </summary>
+		private static Guid _inventoryGroupId;
+
+		/// <summary>
+		/// Holds facility list
+		/// </summary>
+		private static string[] _facilityList;
+		
 		#endregion
 
 		#region Authentication
@@ -108,8 +118,12 @@ namespace Envi.SDK
 		/// <summary>
 		/// Defines the entry point of the application.
 		/// </summary>
-		public static void Main()
+		public static void Main(string[] args)
 		{
+			_inventoryGroupId = Guid.Parse(args[0]);
+
+			_facilityList = new[] { args[1], args[2] };
+
 			// Inventory examples contains simple operation for Inventory like new item creation, update, patch, retrieving paged list
 			// of Inventory or individual item by its primary key 
 			InventoryExamples().GetAwaiter().GetResult();
@@ -205,7 +219,7 @@ namespace Envi.SDK
 		/// <returns>Task.</returns>
 		private static async Task BatchExample()
 		{
-			var batchUrl = $"{_baseAddress}/odata/$batches";
+			var batchUrl = $"{_baseAddress}/odata/$batch";
 			// Global batch request
 			var batchRequest = new HttpRequestMessage(HttpMethod.Post, batchUrl);
 			batchRequest.Headers.Authorization = new AuthenticationHeaderValue("bearer", (await GetToken()).AccessToken);
@@ -216,12 +230,14 @@ namespace Envi.SDK
 			//Send request
 			var batchPK = (await PostBatch(newBatch)).Value;
 
+			var inventoryList = await GetInventoryList();
+
 			// Multiple GET Requests
 			var batchContent = new MultipartContent("mixed", $"batches_{Guid.NewGuid()}")
 			{
-				ComposeGetContent($"{_baseAddress}/odata/Inventory({new Guid("4311192f-c46f-4655-8d51-fc2f49aabf78")})"),
-				ComposeGetContent($"{_baseAddress}/odata/Inventory({new Guid("71395601-8db7-4f3a-b466-106663990c90")})"),
-				ComposeGetContent($"{_baseAddress}/odata/Inventory({new Guid("2a3e66aa-2e15-4035-8534-cb8a2280beea")})")
+				ComposeGetContent($"{_baseAddress}/odata/Inventory({inventoryList.Value[0].InventoryId})"),
+				ComposeGetContent($"{_baseAddress}/odata/Inventory({inventoryList.Value[1].InventoryId})"),
+				ComposeGetContent($"{_baseAddress}/odata/Inventory({inventoryList.Value[2].InventoryId})")
 			};
 
 			// Multiple POST Requests
@@ -335,9 +351,9 @@ namespace Envi.SDK
 		{
 			var client = new EnviODataClient(_baseAddress, _clientId, _username, _password);
 
-			var inventoryList = await client.Get<ODataListResponse<Inventory>>("/odata/Inventory");
+			var inventoryList = await GetInventoryList();
 
-			var inventoryId = inventoryList.Value[0].InventoryId; ;
+			var inventoryId = inventoryList.Value[0].InventoryId;
 			if (inventoryId != null)
 			{
 				var inventoryById = await GetInventoryById(inventoryId.Value);
@@ -385,6 +401,17 @@ namespace Envi.SDK
 			return JsonConvert.DeserializeObject<Inventory>(await response.Content.ReadAsStringAsync());
 		}
 
+		/// <summary>
+		/// Get Inventory List
+		/// </summary>
+		/// <returns>List of Inventory</returns>
+		private static async Task<ODataListResponse<Inventory>> GetInventoryList()
+		{
+			var client = new EnviODataClient(_baseAddress, _clientId, _username, _password);
+
+			return await client.Get<ODataListResponse<Inventory>>("/odata/Inventory");
+		}
+
 		#endregion
 
 		#region HTTP Depletion interface using OData API
@@ -395,13 +422,10 @@ namespace Envi.SDK
 		/// <returns>Task.</returns>
 		private static async Task DepletionInterface()
 		{
-			//Only Facility No is required for usage creation
-			var usageA = new Usage { FacilityNo = "Facility No" };
-			var usageB = new Usage { FacilityNo = "Facility No" };
-			var usageList = new List<Usage> { usageA, usageB };
+			var usageList = _facilityList.Select(f => new Usage { FacilityNo = f }).ToList();
 
 			// Result is list of usage Ids joined by ',' separator
-			var usages = PostUsages(usageList).Result.Split(',').ToList();
+			var usages = (await PostUsages(usageList)).Split(',').ToList();
 
 			var usagePK = Guid.Parse(usages.FirstOrDefault());
 
@@ -426,7 +450,7 @@ namespace Envi.SDK
 
 			// Result is list of dictionary <Guid,string>, where Guid is unsubmitted usage Id and message with error description
 			// In success case result will be empty
-			var result = SubmitUsages(usageSubmitList).Result;
+			var result = await SubmitUsages(usageSubmitList);
 		}
 
 		/// <summary>
@@ -480,8 +504,7 @@ namespace Envi.SDK
 			var response = await Client.PostAsync("/odata/Usages/BulkSubmit", content);
 			return JsonConvert.DeserializeObject<Dictionary<Guid, string>>(
 				JsonConvert.DeserializeObject<ODataErrorResponse>(await response.Content.ReadAsStringAsync())
-					.Description
-					.Message);
+					.Description);
 		}
 
 		#endregion
@@ -667,7 +690,7 @@ namespace Envi.SDK
 		{
 			var inventory = new Inventory
 			{
-				InventoryGroupId = new Guid("88212fc1-7698-40b3-8642-edd4ff793fcd"),
+				InventoryGroupId = _inventoryGroupId,
 				InventoryNo = new Random().Next(0, int.MaxValue).ToString(),
 				InventoryDescription = "InventoryDescription",
 				StockUOM = "EA",

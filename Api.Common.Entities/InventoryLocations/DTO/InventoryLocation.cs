@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Api.Common.Entities.InventoryLocations.DTO
 {
-	public class InventoryLocation 
+	public class InventoryLocation
 	{
 		/// <summary>
 		/// Unique identifier of this Inventory Location item.
@@ -58,6 +58,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Location UOM value(field from Inventory Location details screen)
 		/// </summary>
+		[StringLength(2)]
 		public string LocationUOM { get; set; }
 
 		/// <summary>
@@ -73,6 +74,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Default Issue UOM(field from Inventory Location details screen)
 		/// </summary>
+		[StringLength(2)]
 		public string DefaultIssueUOM { get; set; }
 
 		/// <summary>
@@ -83,6 +85,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Default Count UOM(field from Inventory Location details screen)
 		/// </summary>
+		[StringLength(2)]
 		public string DefaultCountUOM { get; set; }
 
 		/// <summary>
@@ -91,7 +94,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		public int? DefaultCountConversionFactor { get; set; }
 
 		/// <summary>
-		/// Inventory Cost
+		/// Inventory Location Cost
 		/// </summary>
 		public decimal? Cost { get; set; }
 
@@ -119,6 +122,11 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// Price markup value
 		/// </summary>
 		public decimal? PriceMarkup { get; set; }
+
+		/// <summary>
+		/// Price markup Type
+		/// </summary>
+		public byte? PriceMarkupType { get; set; }
 
 		/// <summary>
 		/// Type of price markup: %, $, etc.
@@ -150,16 +158,19 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Represents the shelf location of the Inventory item specified by 'InventoryId'.
 		/// </summary>
+		[StringLength(50)]
 		public string BinShelf { get; set; }
 
 		/// <summary>
 		/// Asset Ledger Number
 		/// </summary>
+		[StringLength(50)]
 		public string AssetLedgerNo { get; set; }
 
 		/// <summary>
 		/// Expense Ledger Number
 		/// </summary>
+		[StringLength(50)]
 		public string ExpenseLedgerNo { get; set; }
 
 		/// <summary>
@@ -170,7 +181,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Date the cost was last updated.
 		/// </summary>
-		public DateTime? CostLastUpdated { get; set; }
+		public DateTimeOffset? CostLastUpdated { get; set; }
 
 		/// <summary>
 		/// User who last updated the cost.
@@ -180,7 +191,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Date this record was first inserted.
 		/// </summary>
-		public DateTime? DateAdded { get; set; }
+		public DateTimeOffset? DateAdded { get; set; }
 
 		/// <summary>
 		/// Indicates which user inserted this record.
@@ -190,7 +201,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Date this record was last updated.
 		/// </summary>
-		public DateTime? LastUpdated { get; set; }
+		public DateTimeOffset? LastUpdated { get; set; }
 
 		/// <summary>
 		/// Indicates which user last updated this record.
@@ -207,13 +218,13 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Location Synchronization Date value
 		/// </summary>
-		public DateTime? LocationSynchronizationDate { get; set; }
+		public DateTimeOffset? LocationSynchronizationDate { get; set; }
 
 		/// <summary>
 		/// Gets or sets the cost synchronization date.
 		/// (Just a copy of LocationSynchronizationDate for OData)
 		/// </summary>
-		public DateTime? CostSynchronizationDate
+		public DateTimeOffset? CostSynchronizationDate
 		{
 			get
 			{
@@ -222,7 +233,7 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 			set
 			{
 				LocationSynchronizationDate = CostSynchronizationDate;
-			} 
+			}
 		}
 
 		/// <summary>
@@ -273,16 +284,12 @@ namespace Api.Common.Entities.InventoryLocations.DTO
 		/// <summary>
 		/// Holds Cross Reference No value 
 		/// </summary>
+		[StringLength(50)]
 		public string CrossReferenceNo { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether [inventory active status].
 		/// </summary>
 		public bool InventoryActiveStatus { get; set; }
-
-		/// <summary>
-		/// Cost Layers
-		/// </summary>
-		public List<CostLayer> CostLayers { get; set; }
 	}
 }

@@ -46,51 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Addresses\DTO\Address.cs" />
-    <Compile Include="Adjustments\DTO\AdjustmentItem.cs" />
     <Compile Include="APBatch\DTO\APBatch.cs" />
-    <Compile Include="Facilities\DTO\Facility.cs" />
     <Compile Include="InventoryActivity\DTO\InventoryActivity.cs" />
-    <Compile Include="InventoryLocations\DTO\InventoryCostLayer.cs" />
     <Compile Include="InventoryLocations\DTO\InventoryLocation.cs" />
     <Compile Include="InventoryTracking\DTO\InventoryTracking.cs" />
     <Compile Include="InventoryVendors\DTO\InventoryVendor.cs" />
-    <Compile Include="InventoryVendors\DTO\InventoryVendorPurchasingUnit.cs" />
-    <Compile Include="InventoryVendors\DTO\InventoryVendorCostHistory.cs" />
-    <Compile Include="Inventory\DTO\FuturePricingItem.cs" />
-    <Compile Include="Inventory\DTO\InventoryExtended.cs" />
     <Compile Include="Inventory\DTO\Inventory.cs" />
-    <Compile Include="Inventory\DTO\InventoryTrackingItem.cs" />
-    <Compile Include="Inventory\DTO\InventoryUOM.cs" />
-    <Compile Include="Inventory\DTO\ManagePurchasing.cs" />
-    <Compile Include="Inventory\DTO\POHistoryItem.cs" />
-    <Compile Include="Locations\DTO\Location.cs" />
-    <Compile Include="Manufacturers\DTO\Manufacturer.cs" />
-    <Compile Include="MatchedInvoices\DTO\APMatchedInvoice.cs" />
-    <Compile Include="MatchedInvoices\DTO\APMatchedInvoiceItem.cs" />
-    <Compile Include="PARAreas\DTO\PARArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PurchaseOrders\DTO\PurchaseOrder.cs" />
-    <Compile Include="PurchaseOrders\DTO\PurchaseOrderItem.cs" />
     <Compile Include="Receiving\DTO\Receipt.cs" />
-    <Compile Include="RequestRateLimits\DTO\LimitWhiteList.cs" />
-    <Compile Include="RequestRateLimits\DTO\RateLimit.cs" />
-    <Compile Include="RequestRateLimits\Enums\LimitLevel.cs" />
-    <Compile Include="RequestRateLimits\Enums\LimitPeriod.cs" />
-    <Compile Include="RequestRateLimits\Enums\LimitType.cs" />
-    <Compile Include="Receiving\DTO\ReceiptItem.cs" />
-    <Compile Include="Usages\DTO\UsageItemSummary.cs" />
     <Compile Include="Usages\DTO\UsageProcedure.cs" />
     <Compile Include="Usages\DTO\Usage.cs" />
     <Compile Include="Usages\DTO\UsageItem.cs" />
-    <Compile Include="Vendors\DTO\Vendor.cs" />
     <Compile Include="Vendors\DTO\VendorInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Adjustments\Enums\" />
-    <Folder Include="Inventory\Enums\" />
-    <Folder Include="Usages\Enums\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

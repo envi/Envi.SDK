@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Api.Common.Entities.InventoryLocations.DTO;
-
+using Api.Common.Entities.InventoryVendors.DTO;
 
 namespace Api.Common.Entities.Inventory.DTO
 {
@@ -74,7 +73,7 @@ namespace Api.Common.Entities.Inventory.DTO
 		/// <summary>
 		/// Get or set the date added.
 		/// </summary>
-		public DateTime? DateAdded { get; set; }
+		public DateTimeOffset? DateAdded { get; set; }
 
 		/// <summary>
 		/// Get or set the added Id value.
@@ -86,10 +85,10 @@ namespace Api.Common.Entities.Inventory.DTO
 		/// </summary>
 		public string AddedByName { get; set; }
 
-		/// <summary>
-		/// Get or set the last updated.
-		/// </summary>
-		public DateTime? LastUpdated { get; set; }
+		///// <summary>
+		///// Get or set the last updated.
+		///// </summary>
+		public DateTimeOffset? LastUpdated { get; set; }
 
 		/// <summary>
 		/// Get or set the last updated by.
@@ -171,38 +170,13 @@ namespace Api.Common.Entities.Inventory.DTO
 		public bool? DefaultIsBillable { get; set; }
 
 		/// <summary>
-		/// Get or set the po history items.
-		/// </summary>
-		public List<POHistoryItem> POHistoryItems { get; set; }
-
-		/// <summary>
-		/// Get or set the future pricing.
-		/// </summary>
-		public List<FuturePricing> FuturePricing { get; set; }
-
-		/// <summary>
 		/// Get or set the inventory locations list.
 		/// </summary>
 		public List<InventoryLocation> InventoryLocations { get; set; }
 
 		/// <summary>
-		/// Get or set the inventory uoms.
-		/// </summary>
-		public List<InventoryUOM> InventoryUOMs { get; set; }
-
-		/// <summary>
 		/// Get or set the inventory vendors.
 		/// </summary>
-		public List<InventoryVendors.DTO.InventoryVendor> InventoryVendors { get; set; }
-
-		/// <summary>
-		/// Get or set the inventory trackings.
-		/// </summary>
-		public List<InventoryTracking.DTO.InventoryTracking> InventoryTrackings { get; set; }
-
-		/// <summary>
-		/// Get list on inventory tracking values
-		/// </summary>
-		public List<InventoryTrackingItem> InventoryTrackingValues { get; set; }
+		public List<InventoryVendor> InventoryVendors { get; set; }
 	}
 }

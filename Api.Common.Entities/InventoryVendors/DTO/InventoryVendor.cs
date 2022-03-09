@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Api.Common.Entities.InventoryVendors.DTO
 {
@@ -18,13 +17,13 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// <summary>
 		/// Inventory number
 		/// </summary>
-		public string InventoryNo { get; set; } 
+		public string InventoryNo { get; set; }
 
 		/// <summary>
 		/// Unique identifier of the Vendor
 		/// </summary>
 		public Guid? VendorId { get; set; }
-		
+
 		/// <summary>
 		/// Vendor No
 		/// </summary>
@@ -53,7 +52,7 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// <summary>
 		/// Vendor item number
 		/// </summary>
-		public string VendorItemNo { get; set; } 
+		public string VendorItemNo { get; set; }
 
 		/// <summary>
 		/// Vendor UOM value
@@ -64,7 +63,7 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// Vendor Conversion Factor value
 		/// </summary>
 		public int? VendorConversionFactor { get; set; }
-		
+
 		/// <summary>
 		/// Vendor Cost
 		/// </summary>
@@ -83,7 +82,7 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// <summary>
 		/// Contract Expiration Date
 		/// </summary>
-		public DateTime? ContractExpDate { get; set; }
+		public DateTimeOffset? ContractExpDate { get; set; }
 
 		/// <summary>
 		/// Manufacturer item number
@@ -113,7 +112,7 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// <summary>
 		/// Date the cost was last updated.
 		/// </summary>
-		public DateTime? CostLastUpdated { get; set; }
+		public DateTimeOffset? CostLastUpdated { get; set; }
 
 		/// <summary>
 		/// User who last updated the cost.
@@ -123,7 +122,7 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// <summary>
 		/// Date this record was first inserted.
 		/// </summary>
-		public DateTime? DateAdded { get; set; }
+		public DateTimeOffset? DateAdded { get; set; }
 
 		/// <summary>
 		/// Indicates which user inserted this record.
@@ -133,7 +132,7 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		/// <summary>
 		/// Date this record was last updated.
 		/// </summary>
-		public DateTime? LastUpdated { get; set; }
+		public DateTimeOffset? LastUpdated { get; set; }
 
 		/// <summary>
 		/// Indicates which user last updated this record.
@@ -173,13 +172,13 @@ namespace Api.Common.Entities.InventoryVendors.DTO
 		public string LastUpdatedByUserName { get; set; }
 
 		/// <summary>
-		/// Cost History Items
+		/// Gets or sets PIM Key
 		/// </summary>
-		public List<InventoryVendorCostHistory> CostHistory { get; set; }
+		public string PIMKey { get; set; }
 
 		/// <summary>
-		/// Purchasing Units
+		/// Gets or sets Alt Item Number
 		/// </summary>
-		public List<InventoryVendorPurchasingUnit> PurchasingUnits { get; set; }
+		public string AltItemNo { get; set; }
 	}
 }

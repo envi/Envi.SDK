@@ -187,12 +187,12 @@ namespace Api.Common.Entities.InventoryActivity.DTO
 		/// <summary>
 		/// Get or set the Exp Date value.
 		/// </summary>
-		public DateTime? ExpDate { get; set; }
+		public DateTimeOffset? ExpDate { get; set; }
 
 		/// <summary>
 		/// Get or set the last updated value.
 		/// </summary>
-		public DateTime LastUpdated { get; set; }
+		public DateTimeOffset LastUpdated { get; set; }
 
 		/// <summary>
 		/// Get or set the last updated by value.
@@ -382,7 +382,7 @@ namespace Api.Common.Entities.InventoryActivity.DTO
 		/// <summary>
 		/// Gets or sets a contract Expiration Date.
 		/// </summary>
-		public DateTime? ContractExpirationDate { get; set; }
+		public DateTimeOffset? ContractExpirationDate { get; set; }
 
 		/// <summary>
 		/// Gets or sets a manufacturer Id.

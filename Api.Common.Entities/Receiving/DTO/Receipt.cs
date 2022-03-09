@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Api.Common.Entities.Receiving.DTO
 {
@@ -86,7 +85,7 @@ namespace Api.Common.Entities.Receiving.DTO
 		/// <summary>
 		/// Get or set the expected delivery date.
 		/// </summary>
-		public DateTime? ExpectedDeliveryDate { get; set; }
+		public DateTimeOffset? ExpectedDeliveryDate { get; set; }
 
 		/// <summary>
 		/// Get or set the po status Id value.
@@ -121,7 +120,7 @@ namespace Api.Common.Entities.Receiving.DTO
 		/// <summary>
 		/// Get or set the po confirmation date.
 		/// </summary>
-		public DateTime? POConfirmationDate { get; set; }
+		public DateTimeOffset? POConfirmationDate { get; set; }
 
 		/// <summary>
 		/// Get or set the name of the po confirmation.
@@ -136,7 +135,7 @@ namespace Api.Common.Entities.Receiving.DTO
 		/// <summary>
 		/// Get or set the order date.
 		/// </summary>
-		public DateTime? OrderDate { get; set; }
+		public DateTimeOffset? OrderDate { get; set; }
 
 		/// <summary>
 		/// Get or set the order by.
@@ -161,7 +160,7 @@ namespace Api.Common.Entities.Receiving.DTO
 		/// <summary>
 		/// Get or set the date added.
 		/// </summary>
-		public DateTime? DateAdded { get; set; }
+		public DateTimeOffset? DateAdded { get; set; }
 
 		/// <summary>
 		/// Get or set the added by.
@@ -181,12 +180,12 @@ namespace Api.Common.Entities.Receiving.DTO
 		/// <summary>
 		/// Get or set the date submitted.
 		/// </summary>
-		public DateTime? DateSubmitted { get; set; }
+		public DateTimeOffset? DateSubmitted { get; set; }
 
 		/// <summary>
 		/// Get or set the receipt date.
 		/// </summary>
-		public DateTime? ReceiptDate { get; set; }
+		public DateTimeOffset? ReceiptDate { get; set; }
 
 		/// <summary>
 		/// Get or set the received by.
@@ -216,7 +215,7 @@ namespace Api.Common.Entities.Receiving.DTO
 		/// <summary>
 		/// Get or set the last updated.
 		/// </summary>
-		public DateTime? LastUpdated { get; set; }
+		public DateTimeOffset? LastUpdated { get; set; }
 
 		/// <summary>
 		/// Get or set the last updated by.
@@ -239,8 +238,13 @@ namespace Api.Common.Entities.Receiving.DTO
 		public bool? ReceiptFillStatus { get; set; }
 
 		/// <summary>
-		/// Gets or sets the receipt items.
+		/// Purchase Order receipt source id
 		/// </summary>
-		public List<ReceiptItem> ReceiptItems { get; set; }
+		public byte ReceiptSourceId { get; set; }
+
+		/// <summary>
+		/// Purchase Order receipt source name
+		/// </summary>
+		public string ReceiptSource { get; set; }
 	}
 }

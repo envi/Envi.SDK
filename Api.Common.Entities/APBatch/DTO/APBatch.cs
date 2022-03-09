@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using Api.Common.Entities.MatchedInvoices.DTO;
 
 namespace Api.Common.Entities.APBatch.DTO
 {
@@ -55,12 +52,12 @@ namespace Api.Common.Entities.APBatch.DTO
 		/// <summary>
 		/// Gets or sets a last export date.
 		/// </summary>
-		public DateTime? LastExportDate { get; set; }
+		public DateTimeOffset? LastExportDate { get; set; }
 
 		/// <summary>
 		/// Gets or sets a date created.
 		/// </summary>
-		public DateTime? DateCreated { get; set; }
+		public DateTimeOffset? DateCreated { get; set; }
 
 		/// <summary>
 		/// Gets or sets a created by.
@@ -75,7 +72,7 @@ namespace Api.Common.Entities.APBatch.DTO
 		/// <summary>
 		/// Gets or sets a last updated.
 		/// </summary>
-		public DateTime? LastUpdated { get; set; }
+		public DateTimeOffset? LastUpdated { get; set; }
 
 		/// <summary>
 		/// Gets or sets a last updated by.
@@ -86,11 +83,6 @@ namespace Api.Common.Entities.APBatch.DTO
 		/// Gets or sets a last updated by user name.
 		/// </summary>
 		public string LastUpdatedByUserName { get; set; }
-
-		/// <summary>
-		/// Gets or sets the matched invoice items.
-		/// </summary>
-		public List<APMatchedInvoice> Invoices { get; set; }
 
 		#endregion
 	}
