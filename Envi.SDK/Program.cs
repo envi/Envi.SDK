@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -27,22 +28,32 @@ namespace Envi.SDK
 		/// <summary>
 		/// Base address of OData API Service
 		/// </summary>
-		private static readonly string _baseAddress = "https://API_HOST_NAME";
+		private static readonly string _baseAddress;
 
 		/// <summary>
 		/// Password
 		/// </summary>
-		private static readonly string _password = "password";
+		private static readonly string _password;
 
 		/// <summary>
 		/// User Name
 		/// </summary>
-		private static readonly string _username = "username";
+		private static readonly string _username;
 
 		/// <summary>
 		/// client_id
 		/// </summary>
-		private static readonly string _clientId = "client_id";
+		private static readonly string _clientId;
+
+		/// <summary>
+		/// Holds Inventory Group PK
+		/// </summary>
+		private static readonly Guid _inventoryGroupId;
+
+		/// <summary>
+		/// Holds facility list
+		/// </summary>
+		private static readonly string[] _facilityList;
 
 		/// <summary>
 		/// Holds instance of correctly initialized HTTP Client
@@ -53,16 +64,6 @@ namespace Envi.SDK
 		/// Holds instance of obtained JWT token
 		/// </summary>
 		private static JWT _token;
-
-		/// <summary>
-		/// Holds Inventory Group PK
-		/// </summary>
-		private static Guid _inventoryGroupId;
-
-		/// <summary>
-		/// Holds facility list
-		/// </summary>
-		private static string[] _facilityList;
 		
 		#endregion
 
@@ -102,7 +103,7 @@ namespace Envi.SDK
 		/// Requests the token.
 		/// </summary>
 		/// <param name="requestData">The request data.</param>
-		/// <returns>Task&lt;JWT&gt;.</returns>
+		/// <returns>Response received from OAuth2 password grand authentication request<see cref="JWT"/></returns>
 		private static async Task<JWT> RequestToken(List<KeyValuePair<string, string>> requestData)
 		{
 			var response = await Client.PostAsync("oauth2/token", new FormUrlEncodedContent(requestData));
@@ -116,14 +117,42 @@ namespace Envi.SDK
 		#region Constructor
 
 		/// <summary>
+		/// Instance Constructor
+		/// </summary>
+		/// <exception cref="ArgumentException">If any required configuration value is missing</exception>
+		static Program()
+		{
+			_baseAddress = ConfigurationManager.AppSettings["baseAddress"];
+			_username = ConfigurationManager.AppSettings["userName"];
+			_password = ConfigurationManager.AppSettings["password"];
+			_clientId = ConfigurationManager.AppSettings["clientId"];
+
+			var invGroupString = ConfigurationManager.AppSettings["inventoryGroupId"];
+			var facilitiesNoString = ConfigurationManager.AppSettings["facilitiesNoList"];
+
+			if (string.IsNullOrWhiteSpace(_baseAddress)
+				|| string.IsNullOrWhiteSpace(_username)
+				|| string.IsNullOrWhiteSpace(_password)
+				|| string.IsNullOrWhiteSpace(_clientId)
+				|| string.IsNullOrWhiteSpace(invGroupString)
+				|| string.IsNullOrWhiteSpace(facilitiesNoString))
+			{
+				throw new ArgumentException("Some of the required configuration values are missing. Please check AppSetting section of App.config.");
+			}
+
+			_inventoryGroupId = Guid.Parse(invGroupString);
+			_facilityList = facilitiesNoString.Split(',');
+		}
+
+		#endregion
+
+		#region Entry Point
+
+		/// <summary>
 		/// Defines the entry point of the application.
 		/// </summary>
-		public static void Main(string[] args)
+		public static void Main()
 		{
-			_inventoryGroupId = Guid.Parse(args[0]);
-
-			_facilityList = new[] { args[1], args[2] };
-
 			// Inventory examples contains simple operation for Inventory like new item creation, update, patch, retrieving paged list
 			// of Inventory or individual item by its primary key 
 			InventoryExamples().GetAwaiter().GetResult();
@@ -417,12 +446,12 @@ namespace Envi.SDK
 		#region HTTP Depletion interface using OData API
 
 		/// <summary>
-		/// Depletions the interface.
+		/// Depletion interface.
 		/// </summary>
 		/// <returns>Task.</returns>
 		private static async Task DepletionInterface()
 		{
-			var usageList = _facilityList.Select(f => new Usage { FacilityNo = f }).ToList();
+			var usageList = _facilityList.Select(f => new Usage { FacilityNo = f.Trim() }).ToList();
 
 			// Result is list of usage Ids joined by ',' separator
 			var usages = (await PostUsages(usageList)).Split(',').ToList();
@@ -685,7 +714,7 @@ namespace Envi.SDK
 		/// <summary>
 		/// Gets the new inventory.
 		/// </summary>
-		/// <returns>Retrun new Inventory.</returns>
+		/// <returns>Return new Inventory.</returns>
 		private static Inventory GetNewInventory()
 		{
 			var inventory = new Inventory
