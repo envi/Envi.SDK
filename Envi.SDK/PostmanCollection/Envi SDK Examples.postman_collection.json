@@ -4355,6 +4355,76 @@
 							"body": "{\n    \"@odata.context\": \"https://api-demo.envi.net/odata/$metadata#Edm.Guid\",\n    \"value\": \"a28ca8aa-c7ff-48f2-b511-70b2943f964d\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Requisition Items Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"inventoryNo\": \"Inventory No 1\",\r\n\"inventoryDescription\": \"inventory description 1\",\r\n\"vendorItemNo\": \"Vendor Item No 1\",\r\n\"quantity\": 1,\r\n\"uom\": \"EA\", \r\n\"conversionFactor\": 1,\r\n\"price\": 15.10, \r\n\"notes\": \"requisition item notes\",\r\n\"manufacturerNo\": \"manufacturer No 1\", \r\n\"manufacturerItemNo\": \"manufacturer item No 1\", \r\n\"vendorNo\": \"Vendor No 1\", \r\n\"locationNo\": \"Location No 1\", \r\n\"facilityNo\": \"Facility No 1\", \r\n\"isTaxable\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/odata/Requisitions(3ed80f00-2375-47f6-bf47-1bb84226ba88)/RequisitionItems",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"odata",
+								"Requisitions(3ed80f00-2375-47f6-bf47-1bb84226ba88)",
+								"RequisitionItems"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Requisition Items Post",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"inventoryNo\": \"Inventory No 1\",\r\n\"inventoryDescription\": \"inventory description 1\",\r\n\"vendorItemNo\": \"Vendor Item No 1\",\r\n\"quantity\": 1,\r\n\"uom\": \"EA\", \r\n\"conversionFactor\": 1,\r\n\"price\": 15.10, \r\n\"notes\": \"requisition item notes\",\r\n\"manufacturerNo\": \"manufacturer No 1\", \r\n\"manufacturerItemNo\": \"manufacturer item No 1\", \r\n\"vendorNo\": \"Vendor No 1\", \r\n\"locationNo\": \"Location No 1\", \r\n\"facilityNo\": \"Facility No 1\", \r\n\"isTaxable\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/odata/Requisitions(3ed80f00-2375-47f6-bf47-1bb84226ba88)/RequisitionItems",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"odata",
+										"Requisitions(3ed80f00-2375-47f6-bf47-1bb84226ba88)",
+										"RequisitionItems"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"@odata.context\": \"https://api-demo.envi.net/odata/$metadata#Edm.Guid\",\n    \"value\": \"8c6a3311-e85d-41cb-b6f4-b45b66ec3c5a\"\n}"
+						}
+					]
 				}
 			]
 		},
