@@ -11,6 +11,8 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<!-- Security: Pin to patched version to override vulnerable transitive dependency. Remove when upstream updates. -->
+		<PackageReference Include="System.Text.Json" Version="10.0.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Api.Common.Entities\Api.Common.Entities.csproj">
