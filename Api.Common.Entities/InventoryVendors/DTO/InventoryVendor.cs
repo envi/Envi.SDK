@@ -2,8 +2,13 @@
 
 namespace Api.Common.Entities.InventoryVendors.DTO;
 
+/// <summary>
+/// Represents vendor-specific inventory purchasing details.
+/// </summary>
 public class InventoryVendor
 {
+	#region Members
+
 	/// <summary>
 	/// Unique identifier of the Inventory Vendor item 
 	/// </summary>
@@ -180,4 +185,6 @@ public class InventoryVendor
 	/// Gets or sets Alt Item Number
 	/// </summary>
 	public string AltItemNo { get; set; }
+
+	#endregion
 }

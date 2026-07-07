@@ -10,6 +10,8 @@ namespace Api.Common.Entities.Inventory.DTO;
 /// </summary>
 public class Inventory
 {
+	#region Members
+
 	/// <summary>
 	/// Get or set the inventory Id value.
 	/// </summary>
@@ -85,9 +87,9 @@ public class Inventory
 	/// </summary>
 	public string AddedByName { get; set; }
 
-	///// <summary>
-	///// Get or set the last updated.
-	///// </summary>
+	/// <summary>
+	/// Get or set the last updated.
+	/// </summary>
 	public DateTimeOffset? LastUpdated { get; set; }
 
 	/// <summary>
@@ -178,4 +180,6 @@ public class Inventory
 	/// Get or set the inventory vendors.
 	/// </summary>
 	public List<InventoryVendor> InventoryVendors { get; set; }
+
+	#endregion
 }

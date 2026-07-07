@@ -2,8 +2,13 @@
 
 namespace Api.Common.Entities.Vendors.DTO;
 
+/// <summary>
+/// Represents vendor details returned by the inventory master workflow.
+/// </summary>
 public class VendorInfo
 {
+	#region Members
+
 	/// <summary>
 	/// Vendor PK
 	/// </summary>
@@ -73,4 +78,6 @@ public class VendorInfo
 	/// Lead time
 	/// </summary>
 	public int? LeadTime { get; set; }
+
+	#endregion
 }

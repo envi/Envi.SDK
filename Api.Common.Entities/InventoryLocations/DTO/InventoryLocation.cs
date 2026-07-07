@@ -3,8 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Api.Common.Entities.InventoryLocations.DTO;
 
+/// <summary>
+/// Represents an inventory-to-location association with stocking and pricing settings.
+/// </summary>
 public class InventoryLocation
 {
+	#region Members
+
 	/// <summary>
 	/// Unique identifier of this Inventory Location item.
 	/// </summary>
@@ -143,6 +148,9 @@ public class InventoryLocation
 	/// </summary>
 	public int? MinQuantity { get; set; }
 
+	/// <summary>
+	/// Quantity currently on requisition.
+	/// </summary>
 	public int? OnRequisition { get; set; }
 
 	/// <summary>
@@ -291,4 +299,6 @@ public class InventoryLocation
 	/// Gets or sets a value indicating whether [inventory active status].
 	/// </summary>
 	public bool InventoryActiveStatus { get; set; }
+
+	#endregion
 }

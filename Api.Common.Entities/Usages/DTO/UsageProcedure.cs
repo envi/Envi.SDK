@@ -7,6 +7,8 @@ namespace Api.Common.Entities.Usages.DTO;
 /// </summary>
 public class UsageProcedure
 {
+	#region Members
+
 	/// <summary>
 	/// Usage Procedure Id
 	/// </summary>
@@ -21,4 +23,6 @@ public class UsageProcedure
 	/// Holds Procedure No to add
 	/// </summary>
 	public string ProcedureNo { get; set; }
+
+	#endregion
 }
