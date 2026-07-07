@@ -8,6 +8,8 @@ namespace Envi.SDK;
 /// </summary>
 public class ODataListResponse<T>
 {
+	#region Members
+
 	/// <summary>
 	/// Gets or sets the odata context.
 	/// </summary>
@@ -30,4 +32,6 @@ public class ODataListResponse<T>
 	/// Gets or sets the value.
 	/// </summary>
 	public List<T> Value { get; set; }
+
+	#endregion
 }

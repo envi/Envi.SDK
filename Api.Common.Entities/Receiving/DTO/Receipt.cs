@@ -7,6 +7,8 @@ namespace Api.Common.Entities.Receiving.DTO;
 /// </summary>
 public class Receipt
 {
+	#region Members
+
 	/// <summary>
 	/// Get or set the po receipt Id value.
 	/// </summary>
@@ -246,4 +248,6 @@ public class Receipt
 	/// Purchase Order receipt source name
 	/// </summary>
 	public string ReceiptSource { get; set; }
+
+	#endregion
 }

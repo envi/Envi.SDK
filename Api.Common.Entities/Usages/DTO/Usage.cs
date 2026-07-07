@@ -2,8 +2,13 @@
 
 namespace Api.Common.Entities.Usages.DTO;
 
+/// <summary>
+/// Represents a usage transaction header for depletion workflows.
+/// </summary>
 public class Usage
 {
+	#region Members
+
 	/// <summary>
 	/// Usage identidier
 	/// </summary>
@@ -98,4 +103,6 @@ public class Usage
 	/// Usage's Tracking Code
 	/// </summary>
 	public string TrackingCode { get; set; }
+
+	#endregion
 }

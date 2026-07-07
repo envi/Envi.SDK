@@ -7,6 +7,8 @@ namespace Api.Common.Entities.Usages.DTO;
 /// </summary>
 public class UsageItem
 {
+	#region Members
+
 	/// <summary>
 	/// Get the usage item Id value.
 	/// </summary>
@@ -211,4 +213,41 @@ public class UsageItem
 	/// Gets or sets the date submitted of usage.
 	/// </summary>
 	public DateTimeOffset? DateSubmitted { get; set; }
+
+	/// <summary>
+	/// System Type Id
+	/// </summary>
+	public byte? SystemTypeId { get; set; }
+
+	/// <summary>
+	/// System Type
+	/// </summary>
+	public string SystemType { get; set; }
+
+	/// <summary>
+	/// Implant Size
+	/// </summary>
+	public string ImplantSize { get; set; }
+
+	/// <summary>
+	/// Implant Position Id
+	/// </summary>
+	public byte? ImplantPositionId { get; set; }
+
+	/// <summary>
+	/// Implant Position
+	/// </summary>
+	public string ImplantPosition { get; set; }
+
+	/// <summary>
+	/// Implant Removed
+	/// </summary>
+	public bool? ImplantRemoved { get; set; }
+
+	/// <summary>
+	/// Implant Completed
+	/// </summary>
+	public bool? ImplantCompleted { get; set; }
+
+	#endregion
 }

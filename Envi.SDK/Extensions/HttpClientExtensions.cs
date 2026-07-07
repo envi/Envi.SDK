@@ -9,6 +9,8 @@ namespace Envi.SDK.Extensions;
 /// </summary>
 public static class HttpClientExtensions
 {
+	#region Public Methods
+
 	/// <summary>
 	/// Perform PATCH request.
 	/// </summary>
@@ -25,4 +27,6 @@ public static class HttpClientExtensions
 		};
 		return client.SendAsync(request);
 	}
+
+	#endregion
 }

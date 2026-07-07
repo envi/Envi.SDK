@@ -6,15 +6,21 @@ namespace Envi.SDK;
 /// <summary>
 /// Class JWT.
 /// </summary>
-public class JWT
+public class Jwt
 {
+	#region Constructor
+
 	/// <summary>
-	/// Initializes a new instance of the <see cref="JWT"/> class.
+	/// Initializes a new instance of the <see cref="Jwt"/> class.
 	/// </summary>
-	public JWT()
+	public Jwt()
 	{
 		IssuedAt = DateTime.Now;
 	}
+
+	#endregion
+
+	#region Public Properties
 
 	/// <summary>
 	/// Gets or sets the access token.
@@ -23,7 +29,7 @@ public class JWT
 	public string AccessToken { get; set; }
 
 	/// <summary>
-	/// Converts to kentype.
+	/// Gets or sets the token type, typically "bearer".
 	/// </summary>
 	[JsonProperty("token_type")]
 	public string TokenType { get; set; }
@@ -47,8 +53,10 @@ public class JWT
 	public DateTime IssuedAt { get; }
 
 	/// <summary>
-	/// Returns isvalid value.
+	/// Gets a value indicating whether the token has not expired yet.
 	/// </summary>
 	[JsonIgnore]
 	public bool IsValid => IssuedAt.AddSeconds(ExpiresIn) > DateTime.Now;
+
+	#endregion
 }
